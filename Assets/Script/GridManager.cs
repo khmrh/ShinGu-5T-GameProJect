@@ -56,7 +56,7 @@ public class GridManager : MonoBehaviour
                 // GridCell 초기화 (좌표 정보 저장)
                 cell.Initialize(x, y);
 
-                grid[x, y] = cell;                                   // 배열에 저장
+                grid[x, y] = cell;  // 배열에 저장
             }
         }
     }
@@ -127,7 +127,7 @@ public class GridManager : MonoBehaviour
 
     public GridCell FindClosestCell(Vector3 position)
     {
-        // 1차적으로 해당 position을 포함하는 셀이 있는지 확인
+        // 해당 position을 포함하는 셀이 있는지 확인
         for (int x = 0; x < gridWidth; x++)
         {
             for (int y = 0; y < gridHeight; y++)
