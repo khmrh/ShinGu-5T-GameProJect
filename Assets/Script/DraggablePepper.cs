@@ -12,6 +12,7 @@ public class DraggablePepper : MonoBehaviour
     public float snapBackSpeed = 20f;           //원위치로 돌아가는 속도
 
     public bool isDragging = false;             //현재 드래그 중인지
+    private bool isReturning = false;           // 현재 돌아가는 중인지
     public Vector3 originalPosition;            //원래 위치 
     public GridCell currentCell;                //현재 위치한 칸
 
@@ -40,10 +41,22 @@ public class DraggablePepper : MonoBehaviour
             Vector3 targetPosition = GetMouseWorldPosition() + dragOffset;
             transform.position = Vector3.Lerp(transform.position, targetPosition, dragSpeed * Time.deltaTime);
         }
-        else if (transform.position != originalPosition && currentCell != null)
+        else if (isReturning)
         {
             transform.position = Vector3.Lerp(transform.position, originalPosition, snapBackSpeed * Time.deltaTime);
+            if (Vector3.Distance(transform.position, originalPosition) < 0.01f) // 충분히 가까워지면 멈춤
+            {
+                transform.position = originalPosition;
+                isReturning = false;
+            }
         }
+
+        // 구 버전 돌아가는 함수
+
+        // else if (transform.position != originalPosition && currentCell != null) // 이 부분은 제거하거나 isReturning 조건에 통합
+        // {
+        //     transform.position=Vector3.Lerp(transform.position, originalPosition, snapBackSpeed * Time.deltaTime);
+        // }
     }
 
     void StartDragging()
@@ -103,9 +116,17 @@ public class DraggablePepper : MonoBehaviour
         transform.position = originalPosition;
     }
 
-    public void ReturnToOriginalPosition()//원래 위치로 돌아가는 함수 
+    /*
+    (구버전) 원래 위치로 돌아가는 함수 
+    public void ReturnToOriginalPosition()
     {
         transform.position = originalPosition;
+    }
+    */
+
+    public void ReturnToOriginalPosition() //원래 위치로 돌아가는 함수
+    {
+        isReturning = true;
     }
 
     public void MergeWithCell(GridCell targetCell)
