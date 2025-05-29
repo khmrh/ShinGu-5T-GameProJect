@@ -7,8 +7,8 @@ using UnityEngine;
 public class DraggablePepper : MonoBehaviour
 {
 
-    public int rankLevel = 1;                   //계급장 레벨
-    public float dragSpeed = 15f;               //드래그 시 이동 속도
+    public int pepperLevel = 1;                   //계급장 레벨
+    public float dragSpeed = 20f;               //드래그 시 이동 속도
     public float snapBackSpeed = 20f;           //원위치로 돌아가는 속도
 
     public bool isDragging = false;             //현재 드래그 중인지
@@ -27,10 +27,23 @@ public class DraggablePepper : MonoBehaviour
         gridManager = FindObjectOfType<GridManager>();
     }
 
-    // Start is called before the first frame update
+
     void Start()
     {
         originalPosition = transform.position;
+    }
+
+    void Update()
+    {
+        if (isDragging)
+        {
+            Vector3 targetPosition = GetMouseWorldPosition() + dragOffset;
+            transform.position = Vector3.Lerp(transform.position, targetPosition, dragSpeed * Time.deltaTime);
+        }
+        else if (transform.position != originalPosition && currentCell != null)
+        {
+            transform.position = Vector3.Lerp(transform.position, originalPosition, snapBackSpeed * Time.deltaTime);
+        }
     }
 
     void StartDragging()
@@ -51,7 +64,7 @@ public class DraggablePepper : MonoBehaviour
             {
                 MoveToCell(targetCell);
             }
-            else if (targetCell.currentRank != this && targetCell.currentRank.rankLevel == rankLevel)
+            else if (targetCell.currentRank != this && targetCell.currentRank.pepperLevel == pepperLevel)
             {
                 MergeWithCell(targetCell);
             }
@@ -63,20 +76,6 @@ public class DraggablePepper : MonoBehaviour
         else
         {
             ReturnToOriginalPosition();
-        }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (isDragging)
-        {
-            Vector3 targetPosition = GetMouseWorldPosition() + dragOffset;
-            transform.position = Vector3.Lerp(transform.position, targetPosition, dragSpeed * Time.deltaTime);
-        }
-        else if (transform.position != originalPosition && currentCell != null)
-        {
-            transform.position = Vector3.Lerp(transform.position, originalPosition, snapBackSpeed * Time.deltaTime);
         }
     }
 
@@ -111,7 +110,7 @@ public class DraggablePepper : MonoBehaviour
 
     public void MergeWithCell(GridCell targetCell)
     {
-        if (targetCell.currentRank == null || targetCell.currentRank.rankLevel != rankLevel) //같은 레벨인지 확인
+        if (targetCell.currentRank == null || targetCell.currentRank.pepperLevel != pepperLevel) //같은 레벨인지 확인
         {
             ReturnToOriginalPosition(); //원래 위치로 돌아가기
             return;
@@ -135,7 +134,7 @@ public class DraggablePepper : MonoBehaviour
 
     public void SetPepperLevel(int level)
     {
-        rankLevel = level;
+        pepperLevel = level;
 
         if (gridManager != null && gridManager.PepperSprites.Length > level - 1)
         {

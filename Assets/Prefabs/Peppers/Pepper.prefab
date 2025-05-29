@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8483224097076878909}
   - component: {fileID: 3850655031025872494}
   m_Layer: 0
-  m_Name: 03.Cheongyang
+  m_Name: Pepper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: 5f3c2d4da698c2140a2f4b2aef47a1bc, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ada66ade0b558d34bb9906b023205cf4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
