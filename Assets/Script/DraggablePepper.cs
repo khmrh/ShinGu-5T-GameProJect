@@ -15,7 +15,6 @@ public class DraggablePepper : MonoBehaviour
     public bool isReturning = false;                                // 현재 돌아가는 중인지
     public bool isMovingToCell = false;                             // 현재 셀로 이동 중인지
     public GridCell targetMoveCell;                                 // 이동 목표 셀
-    public float moveProgress = 0f;                                 // 이동 진행도
     public Vector3 originalPosition;                                 //원래 위치
     public GridCell currentCell;                                     //현재 위치한 칸
 
@@ -46,11 +45,13 @@ public class DraggablePepper : MonoBehaviour
     {
         if (isDragging)
         {
+            Debug.Log("isDragging");
             Vector3 targetPosition = GetMouseWorldPosition() + dragOffset;
             transform.position = Vector3.Lerp(transform.position, targetPosition, dragSpeed * Time.deltaTime);
         }
         else if (isReturning)
         {
+            Debug.Log("isReturning");
             pepperCollider.enabled = false; // 이동 중 클릭 방지
             transform.position = Vector3.Lerp(transform.position, originalPosition, snapBackSpeed * Time.deltaTime);
             if (Vector3.Distance(transform.position, originalPosition) < 0.05f) // 충분히 가까워지면 멈춤
@@ -62,6 +63,7 @@ public class DraggablePepper : MonoBehaviour
         }
         else if (isMovingToCell && targetMoveCell != null)
         {
+            Debug.Log("isMovingToCell");
             pepperCollider.enabled = false; // 이동 중 클릭 방지
             transform.position = Vector3.Lerp(transform.position, targetMoveCell.transform.position, Time.deltaTime * moveToCellSpeed);
 
@@ -70,7 +72,6 @@ public class DraggablePepper : MonoBehaviour
                 transform.position = targetMoveCell.transform.position; // 최종 위치 정확히 설정
                 isMovingToCell = false;
                 targetMoveCell = null;
-                moveProgress = 0f;
                 pepperCollider.enabled = true; // 돌아오면 클릭 활성화
             }
         }
@@ -127,7 +128,6 @@ public class DraggablePepper : MonoBehaviour
     public void MoveToCell(GridCell targetCell)    //특정 칸으로 이동
     {
         if (targetCell == null) return; //targetCell이 null이면 즉시 반환
-
         if (currentCell != null)
         {
             currentCell.currentRank = null; //기존 칸에서 제거
@@ -135,7 +135,6 @@ public class DraggablePepper : MonoBehaviour
 
         targetMoveCell = targetCell;
         isMovingToCell = true;
-        moveProgress = 0f;
         targetCell.currentRank = this;
         currentCell = targetCell;
         originalPosition = new Vector3(targetCell.transform.position.x, targetCell.transform.position.y, 0f);
