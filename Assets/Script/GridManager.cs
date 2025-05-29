@@ -23,13 +23,15 @@ public class GridManager : MonoBehaviour
     void Start()
     {
         InitializeGrid();
-        SpawnNewRank();
-        SpawnNewRank();
     }
 
     void Update()
     {
-        // Update 로직 이후 제작
+        // 게임 테스트용 *(이후 제거)
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            SpawnNewRank();
+        }
     }
 
     void InitializeGrid()                                           // 그리드 초기화
@@ -182,11 +184,6 @@ public class GridManager : MonoBehaviour
         // 타겟 랭크의 레벨을 증가시키고 드래그한 랭크 제거
         targetRank.SetPepperLevel(newLevel);
         RemoveRank(draggedRank);
-        // 60% 확률로 새 랭크 생성
-        if (Random.Range(0, 100) < 60)
-        {
-            SpawnNewRank();
-        }
     }
 
     public void RemoveRank(DraggablePepper rank)

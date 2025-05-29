@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -6,28 +6,36 @@ using UnityEngine;
 
 public class DraggablePepper : MonoBehaviour
 {
+    public int pepperLevel = 1;                                        //ê³„ê¸‰ì¥ ë ˆë²¨
+    public float dragSpeed = 100f;                                    //ë“œë˜ê·¸ ì‹œ ì´ë™ ì†ë„
+    public float snapBackSpeed = 10f;                                //ì›ìœ„ì¹˜ë¡œ ëŒì•„ê°€ëŠ” ì†ë„
+    public float moveToCellSpeed = 10f;                               // ì…€ ì´ë™ ì†ë„
 
-    public int pepperLevel = 1;                   //°è±ŞÀå ·¹º§
-    public float dragSpeed = 20f;               //µå·¡±× ½Ã ÀÌµ¿ ¼Óµµ
-    public float snapBackSpeed = 20f;           //¿øÀ§Ä¡·Î µ¹¾Æ°¡´Â ¼Óµµ
+    public bool isDragging = false;                                  //í˜„ì¬ ë“œë˜ê·¸ ì¤‘ì¸ì§€
+    public bool isReturning = false;                                // í˜„ì¬ ëŒì•„ê°€ëŠ” ì¤‘ì¸ì§€
+    public bool isMovingToCell = false;                             // í˜„ì¬ ì…€ë¡œ ì´ë™ ì¤‘ì¸ì§€
+    public GridCell targetMoveCell;                                 // ì´ë™ ëª©í‘œ ì…€
+    public float moveProgress = 0f;                                 // ì´ë™ ì§„í–‰ë„
+    public Vector3 originalPosition;                                 //ì›ë˜ ìœ„ì¹˜
+    public GridCell currentCell;                                     //í˜„ì¬ ìœ„ì¹˜í•œ ì¹¸
 
-    public bool isDragging = false;             //ÇöÀç µå·¡±× ÁßÀÎÁö
-    private bool isReturning = false;           // ÇöÀç µ¹¾Æ°¡´Â ÁßÀÎÁö
-    public Vector3 originalPosition;            //¿ø·¡ À§Ä¡ 
-    public GridCell currentCell;                //ÇöÀç À§Ä¡ÇÑ Ä­
-
-    public Camera mainCamera;                   //¸ŞÀÎ Ä«¸Ş¶ó
-    public Vector3 dragOffset;                  //µå·¡±× ½Ã ¿ÀÇÁ¼Â (º¸Á¤°ª)
-    public SpriteRenderer spriteRenderer;       //°è±ŞÀå ÀÌ¹ÌÁö ·»´õ·¯
-    public GridManager gridManager;           //°ÔÀÓ ¸Ş´ÏÀú
+    public Camera mainCamera;                                        //ë©”ì¸ ì¹´ë©”ë¼
+    public Vector3 dragOffset;                                       //ë“œë˜ê·¸ ì‹œ ì˜¤í”„ì…‹ (ë³´ì •ê°’)
+    public SpriteRenderer spriteRenderer;                            //ê³„ê¸‰ì¥ ì´ë¯¸ì§€ ë Œë”ëŸ¬
+    public GridManager gridManager;                                   //ê²Œì„ ë©”ë‹ˆì €
+    public Collider2D pepperCollider;                                // ì½œë¼ì´ë” ì°¸ì¡°
 
     private void Awake()
     {
         mainCamera = Camera.main;
         spriteRenderer = GetComponent<SpriteRenderer>();
         gridManager = FindObjectOfType<GridManager>();
+        pepperCollider = GetComponent<Collider2D>();
+        if (pepperCollider == null)
+        {
+            Debug.Log("ì´ ì˜¤ë¸Œì íŠ¸ì— Collider2D ì—†ìŒ.");
+        }
     }
-
 
     void Start()
     {
@@ -43,20 +51,30 @@ public class DraggablePepper : MonoBehaviour
         }
         else if (isReturning)
         {
+            pepperCollider.enabled = false; // ëŒì•„ê°€ëŠ” ë™ì•ˆ í´ë¦­ ë°©ì§€
             transform.position = Vector3.Lerp(transform.position, originalPosition, snapBackSpeed * Time.deltaTime);
-            if (Vector3.Distance(transform.position, originalPosition) < 0.01f) // ÃæºĞÈ÷ °¡±î¿öÁö¸é ¸ØÃã
+            if (Vector3.Distance(transform.position, originalPosition) < 0.05f) // ì¶©ë¶„íˆ ê°€ê¹Œì›Œì§€ë©´ ë©ˆì¶¤
             {
                 transform.position = originalPosition;
                 isReturning = false;
+                pepperCollider.enabled = true; // ëŒì•„ì˜¤ë©´ í´ë¦­ í™œì„±í™”
             }
         }
+        else if (isMovingToCell && targetMoveCell != null)
+        {
+            pepperCollider.enabled = false; // ì´ë™ ì¤‘ í´ë¦­ ë°©ì§€
+            moveProgress += Time.deltaTime * moveToCellSpeed;
+            transform.position = Vector3.Lerp(transform.position, targetMoveCell.transform.position, moveProgress);
 
-        // ±¸ ¹öÀü µ¹¾Æ°¡´Â ÇÔ¼ö
-
-        // else if (transform.position != originalPosition && currentCell != null) // ÀÌ ºÎºĞÀº Á¦°ÅÇÏ°Å³ª isReturning Á¶°Ç¿¡ ÅëÇÕ
-        // {
-        //     transform.position=Vector3.Lerp(transform.position, originalPosition, snapBackSpeed * Time.deltaTime);
-        // }
+            if (moveProgress >= 1f)
+            {
+                transform.position = targetMoveCell.transform.position; // ìµœì¢… ìœ„ì¹˜ ì •í™•íˆ ì„¤ì •
+                isMovingToCell = false;
+                targetMoveCell = null;
+                moveProgress = 0f;
+                pepperCollider.enabled = true; // ì´ë™ ì™„ë£Œë˜ë©´ í´ë¦­ í™œì„±í™”
+            }
+        }
     }
 
     void StartDragging()
@@ -94,59 +112,76 @@ public class DraggablePepper : MonoBehaviour
 
     private void OnMouseDown()
     {
-        StartDragging();
+        // ë“œë˜ê·¸ ì¤‘ì´ê±°ë‚˜ ì´ë™/ë³µê·€ ì¤‘ì´ ì•„ë‹ ë•Œë§Œ ë“œë˜ê·¸ ì‹œì‘
+        if (!isDragging && !isReturning && !isMovingToCell)
+        {
+            StartDragging();
+        }
     }
+
     private void OnMouseUp()
     {
         if (!isDragging) return;
         StopDragging();
     }
 
-    public void MoveToCell(GridCell targetCell)     //Æ¯Á¤ Ä­À¸·Î ÀÌµ¿
+    public void MoveToCell(GridCell targetCell)    //íŠ¹ì • ì¹¸ìœ¼ë¡œ ì´ë™
     {
         if (currentCell != null)
         {
-            currentCell.currentRank = null; //±âÁ¸ Ä­¿¡¼­ Á¦°Å
+            currentCell.currentRank = null; //ê¸°ì¡´ ì¹¸ì—ì„œ ì œê±°
         }
 
-        currentCell = targetCell;           //»õ Ä­À¸·Î ÀÌµ¿ 
+        targetMoveCell = targetCell;
+        isMovingToCell = true;
+        moveProgress = 0f;
         targetCell.currentRank = this;
+        currentCell = targetCell;
+        originalPosition = new Vector3(targetCell.transform.position.x, targetCell.transform.position.y, 0f);
 
+        /*
+        // (êµ¬ë²„ì „) ìˆœê°„ì´ë™
+        if (currentCell != null)
+        {
+            currentCell.currentRank = null; //ê¸°ì¡´ ì¹¸ì—ì„œ ì œê±°
+        }
+        currentCell = targetCell;           //ìƒˆ ì¹¸ìœ¼ë¡œ ì´ë™
+        targetCell.currentRank = this;
         originalPosition = new Vector3(targetCell.transform.position.x, targetCell.transform.position.y, 0f);
         transform.position = originalPosition;
+        */
     }
 
-    /*
-    (±¸¹öÀü) ¿ø·¡ À§Ä¡·Î µ¹¾Æ°¡´Â ÇÔ¼ö 
-    public void ReturnToOriginalPosition()
-    {
-        transform.position = originalPosition;
-    }
-    */
-
-    public void ReturnToOriginalPosition() //¿ø·¡ À§Ä¡·Î µ¹¾Æ°¡´Â ÇÔ¼ö
+    public void ReturnToOriginalPosition() //ì›ë˜ ìœ„ì¹˜ë¡œ ëŒì•„ê°€ëŠ” í•¨ìˆ˜
     {
         isReturning = true;
     }
 
+    /*
+Â  Â  (êµ¬ë²„ì „) ì›ë˜ ìœ„ì¹˜ë¡œ ëŒì•„ê°€ëŠ” í•¨ìˆ˜Â 
+Â  Â  public void ReturnToOriginalPosition()
+Â  Â  {
+Â  Â  Â  Â  transform.position = originalPosition;
+Â  Â  }
+Â  Â  */
+
     public void MergeWithCell(GridCell targetCell)
     {
-        if (targetCell.currentRank == null || targetCell.currentRank.pepperLevel != pepperLevel) //°°Àº ·¹º§ÀÎÁö È®ÀÎ
+        if (targetCell.currentRank == null || targetCell.currentRank.pepperLevel != pepperLevel) //ê°™ì€ ë ˆë²¨ì¸ì§€ í™•ì¸
         {
-            ReturnToOriginalPosition(); //¿ø·¡ À§Ä¡·Î µ¹¾Æ°¡±â
+            ReturnToOriginalPosition(); //ì›ë˜ ìœ„ì¹˜ë¡œ ëŒì•„ê°€ê¸°
             return;
         }
 
         if (currentCell != null)
         {
-            currentCell.currentRank = null; //±âÁ¸ Ä­¿¡¼­ Á¦°Å
+            currentCell.currentRank = null; //ê¸°ì¡´ ì¹¸ì—ì„œ ì œê±°
         }
 
         gridManager.MergeRanks(this, targetCell.currentRank);
-
     }
 
-    public Vector3 GetMouseWorldPosition()                  //¸¶¿ì½º ¿ùµå ÁÂÇ¥ ±¸ÇÏ±â 
+    public Vector3 GetMouseWorldPosition()                                        //ë§ˆìš°ìŠ¤ ì›”ë“œ ì¢Œí‘œ êµ¬í•˜ê¸°
     {
         Vector3 mousePos = Input.mousePosition;
         mousePos.z = -mainCamera.transform.position.z;
@@ -159,9 +194,7 @@ public class DraggablePepper : MonoBehaviour
 
         if (gridManager != null && gridManager.PepperSprites.Length > level - 1)
         {
-            spriteRenderer.sprite = gridManager.PepperSprites[level - 1];     //·¹º§¿¡ ¸Â´Â ½ºÇÁ¶óÀÌÆ®·Î º¯°æ 
+            spriteRenderer.sprite = gridManager.PepperSprites[level - 1];    //ë ˆë²¨ì— ë§ëŠ” ìŠ¤í”„ë¼ì´íŠ¸ë¡œ ë³€ê²½
         }
     }
-
-
 }
