@@ -178,7 +178,7 @@ public class DraggablePepper : MonoBehaviour
     }
 
     /*
-    (구버전) 원래 위치로 돌아가는 함수 
+    (구버전) 원래 위치로 돌아가는 함수 (텔레포트) 
     public void ReturnToOriginalPosition()
     {
         transform.position = originalPosition;
