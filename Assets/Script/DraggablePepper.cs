@@ -45,13 +45,10 @@ public class DraggablePepper : MonoBehaviour
     {
         if (isDragging)
         {
-            Debug.Log("isDragging");
-            Vector3 targetPosition = GetMouseWorldPosition() + dragOffset;
-            transform.position = Vector3.Lerp(transform.position, targetPosition, dragSpeed * Time.deltaTime);
+            transform.position = GetMouseWorldPosition() + dragOffset;
         }
         else if (isReturning)
         {
-            Debug.Log("isReturning");
             pepperCollider.enabled = false; // 이동 중 클릭 방지
             transform.position = Vector3.Lerp(transform.position, originalPosition, snapBackSpeed * Time.deltaTime);
             if (Vector3.Distance(transform.position, originalPosition) < 0.05f) // 충분히 가까워지면 멈춤
@@ -63,7 +60,6 @@ public class DraggablePepper : MonoBehaviour
         }
         else if (isMovingToCell && targetMoveCell != null)
         {
-            Debug.Log("isMovingToCell");
             pepperCollider.enabled = false; // 이동 중 클릭 방지
             transform.position = Vector3.Lerp(transform.position, targetMoveCell.transform.position, Time.deltaTime * moveToCellSpeed);
 
@@ -127,6 +123,8 @@ public class DraggablePepper : MonoBehaviour
 
     public void MoveToCell(GridCell targetCell)    //특정 칸으로 이동
     {
+        Debug.Log(targetCell);
+
         if (targetCell == null) return; //targetCell이 null이면 즉시 반환
         if (currentCell != null)
         {
