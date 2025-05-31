@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    path: Assets/Scenes/MainMenu.unity
+    guid: 7034a37fbc0820740aad4844635f37fe
+  - enabled: 1
+    path: Assets/Scenes/PepperMergeGame.unity
+    guid: e8140a6cdd0ac6341aa3de18db56ce85
   m_configObjects: {}
