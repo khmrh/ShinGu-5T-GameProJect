@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class DraggablePepper : MonoBehaviour
 {
     public int pepperLevel = 1;                                        //계급장 레벨
-    public float dragSpeed = 100f;                                    //드래그 시 이동 속도
-    public float snapBackSpeed = 10f;                                //원위치로 돌아가는 속도
-    public float moveToCellSpeed = 20f;                               // 셀 이동 속도
+    public float dragSpeed = 25f;                                    //선형 보간 이동 속도
 
     public bool isDragging = false;                                  //현재 드래그 중인지
     public bool isReturning = false;                                // 현재 돌아가는 중인지
@@ -43,6 +37,7 @@ public class DraggablePepper : MonoBehaviour
 
     void Update()
     {
+
         if (isDragging)
         {
             transform.position = GetMouseWorldPosition() + dragOffset;
@@ -50,10 +45,11 @@ public class DraggablePepper : MonoBehaviour
         else if (isReturning)
         {
             pepperCollider.enabled = false; // 이동 중 클릭 방지
-            transform.position = Vector3.Lerp(transform.position, originalPosition, snapBackSpeed * Time.deltaTime);
+            transform.position = Vector3.Lerp(transform.position, originalPosition, dragSpeed * Time.deltaTime);
             if (Vector3.Distance(transform.position, originalPosition) < 0.05f) // 충분히 가까워지면 멈춤
             {
                 transform.position = originalPosition; // 최종 위치 정확히 설정
+                transform.position = new Vector3(transform.position.x, transform.position.y, 0f); // Z좌표 변경
                 isReturning = false;
                 pepperCollider.enabled = true; // 돌아오면 클릭 활성화
             }
@@ -61,16 +57,26 @@ public class DraggablePepper : MonoBehaviour
         else if (isMovingToCell && targetMoveCell != null)
         {
             pepperCollider.enabled = false; // 이동 중 클릭 방지
-            transform.position = Vector3.Lerp(transform.position, targetMoveCell.transform.position, Time.deltaTime * moveToCellSpeed);
+            transform.position = Vector3.Lerp(transform.position, targetMoveCell.transform.position, Time.deltaTime * dragSpeed);
 
             if (Vector3.Distance(transform.position, targetMoveCell.transform.position) < 0.1f) // 충분히 가까워지면 멈춤
             {
                 transform.position = targetMoveCell.transform.position; // 최종 위치 정확히 설정
+                transform.position = new Vector3(transform.position.x, transform.position.y, 0f); // Z좌표 변경
                 isMovingToCell = false;
                 targetMoveCell = null;
                 pepperCollider.enabled = true; // 돌아오면 클릭 활성화
             }
         }
+    }
+    private void OnMouseDown()
+    {
+        StartDragging();
+    }
+    private void OnMouseUp()
+    {
+        if (!isDragging) return;
+        StopDragging();
     }
 
     void StartDragging()
@@ -83,7 +89,7 @@ public class DraggablePepper : MonoBehaviour
     void StopDragging()
     {
         isDragging = false;
-        spriteRenderer.sortingOrder = 1;
+        spriteRenderer.sortingOrder = 5;
         GridCell targetCell = gridManager.FindClosestCell(transform.position);
         if (targetCell != null)
         {
@@ -106,91 +112,27 @@ public class DraggablePepper : MonoBehaviour
         }
     }
 
-    private void OnMouseDown()
-    {
-        // 드래그 중이거나 이동/복귀 중이 아닐 때만 드래그 시작
-        if (!isDragging && !isReturning && !isMovingToCell)
-        {
-            StartDragging();
-        }
-    }
-
-    private void OnMouseUp()
-    {
-        if (!isDragging) return;
-        StopDragging();
-    }
-
-    public void MoveToCell(GridCell targetCell)    //특정 칸으로 이동
-    {
-        Debug.Log(targetCell);
-
-        if (targetCell == null) return; //targetCell이 null이면 즉시 반환
-        if (currentCell != null)
-        {
-            currentCell.currentRank = null; //기존 칸에서 제거
-        }
-
-        targetMoveCell = targetCell;
-        isMovingToCell = true;
-        targetCell.currentRank = this;
-        currentCell = targetCell;
-        originalPosition = new Vector3(targetCell.transform.position.x, targetCell.transform.position.y, 0f);
-    }
-
-    /*
-    구버전 MoveToCell (Lerp) 함수
-
-     public void MoveToCell(GridCell targetCell)    //특정 칸으로 이동
-    {
-        if (currentCell != null)
-        {
-            currentCell.currentRank = null; //기존 칸에서 제거
-        }
-
-        targetMoveCell = targetCell;
-        isMovingToCell = true;
-        moveProgress = 0f;
-        targetCell.currentRank = this;
-        currentCell = targetCell;
-        originalPosition = new Vector3(targetCell.transform.position.x, targetCell.transform.position.y, 0f); 
-    }
-
-    (구버전) 순간이동
     public void MoveToCell(GridCell targetCell)    //특정 칸으로 이동
     {
         if (currentCell != null)
         {
             currentCell.currentRank = null; //기존 칸에서 제거
         }
-        currentCell = targetCell;           //새 칸으로 이동
+
+        isMovingToCell = true;
+        targetMoveCell = targetCell;
         targetCell.currentRank = this;
+        currentCell = targetCell;
         originalPosition = new Vector3(targetCell.transform.position.x, targetCell.transform.position.y, 0f);
-        transform.position = originalPosition;
     }
-    */
 
     public void ReturnToOriginalPosition() //원래 위치로 돌아가는 함수
     {
         isReturning = true;
     }
 
-    /*
-    (구버전) 원래 위치로 돌아가는 함수 (텔레포트) 
-    public void ReturnToOriginalPosition()
-    {
-        transform.position = originalPosition;
-    }
-    */
-
     public void MergeWithCell(GridCell targetCell)
     {
-        if (targetCell.currentRank == null || targetCell.currentRank.pepperLevel != pepperLevel) //같은 레벨인지 확인
-        {
-            ReturnToOriginalPosition(); //원래 위치로 돌아가기
-            return;
-        }
-
         if (currentCell != null)
         {
             currentCell.currentRank = null; //기존 칸에서 제거

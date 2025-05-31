@@ -166,12 +166,13 @@ public class GridManager : MonoBehaviour
 
     public void MergeRanks(DraggablePepper draggedRank, DraggablePepper targetRank)
     {
-        // 병합 대상이 없거나 레벨이 다르면 원래 위치로 되돌리고 종료
+        /* 병합 대상이 없거나 레벨이 다르면 원래 위치로 되돌리고 종료
         if (draggedRank == null || targetRank == null || draggedRank.pepperLevel != targetRank.pepperLevel)
         {
             if (draggedRank != null) draggedRank.ReturnToOriginalPosition();
             return;
         }
+        */
         // 새로운 레벨 계산
         int newLevel = targetRank.pepperLevel + 1;
         // 최대 레벨 초과 시 드래그한 랭크 제거 후 종료
