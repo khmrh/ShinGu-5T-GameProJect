@@ -49,7 +49,6 @@ public class DraggablePepper : MonoBehaviour
             if (Vector3.Distance(transform.position, originalPosition) < 0.05f) // 충분히 가까워지면 멈춤
             {
                 transform.position = originalPosition; // 최종 위치 정확히 설정
-                transform.position = new Vector3(transform.position.x, transform.position.y, 0f); // Z좌표 변경
                 isReturning = false;
                 pepperCollider.enabled = true; // 돌아오면 클릭 활성화
             }
