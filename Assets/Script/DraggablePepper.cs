@@ -71,12 +71,20 @@ public class DraggablePepper : MonoBehaviour
     private void OnMouseDown()
     {
         StartDragging();
+
+        // 기존 드래그 시작
+        StartDragging();
+
+        // 클릭 시 GameManager에 복제 요청
+        FindObjectOfType<PepperManager>().TryClonePepper(this);
     }
     private void OnMouseUp()
     {
         if (!isDragging) return;
         StopDragging();
     }
+ 
+
 
     void StartDragging()
     {
@@ -156,4 +164,7 @@ public class DraggablePepper : MonoBehaviour
             spriteRenderer.sprite = gridManager.PepperSprites[level - 1];    //레벨에 맞는 스프라이트로 변경
         }
     }
+
+  
+
 }

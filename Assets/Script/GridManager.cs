@@ -87,7 +87,7 @@ public class GridManager : MonoBehaviour
 
     }
 
-    private GridCell FindEmptyCell()                                 // 비어있는 칸 찾기
+    public GridCell FindEmptyCell()                                 // 비어있는 칸 찾기
     {
         List<GridCell> emptyCells = new List<GridCell>();            // 빈 칸들을 저장할 리스트
 
