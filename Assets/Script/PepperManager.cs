@@ -7,9 +7,12 @@ public class PepperManager : MonoBehaviour
     public GameObject PepperPrefabs;         // 생성할 계급장 프리팹
     public Transform gridContainer;          // 계급장 오브젝트의 부모
 
+    [Header("프리팹 생성 제한")]
+    public int maxPepperCount = 50;          // 최대 생성 가능한 수
+    private int currentPepperCount = 0;      // 현재까지 생성된 수
+
     private void Awake()
     {
-        // 혹시 연결 안 되어 있다면 자동 할당 (보조용)
         if (gridManager == null)
         {
             gridManager = FindObjectOfType<GridManager>();
@@ -20,26 +23,42 @@ public class PepperManager : MonoBehaviour
     /// 클릭한 계급장 오브젝트를 복제하여 빈 셀에 생성한다.
     /// </summary>
     /// <param name="original">복제할 원본 계급장</param>
-    public void TryClonePepper(DraggablePepper original)
+    public void TryCloneAndReplace(DraggablePepper original)
     {
-        // 1. 빈 셀 찾기
-        GridCell targetCell = gridManager.FindEmptyCell(); // ✅ 인스턴스를 통해 접근
+        // 1. 빈 셀 탐색
+        GridCell targetCell = gridManager.FindEmptyCell();
         if (targetCell == null)
         {
-            Debug.Log("빈 셀이 없습니다. 복제 실패");
+            Debug.Log("빈 셀이 없습니다. 복제 불가");
             return;
         }
 
-        // 2. 프리팹으로 오브젝트 생성
+        // 2. 복제 생성
         Vector3 spawnPos = targetCell.transform.position;
         GameObject clone = Instantiate(PepperPrefabs, spawnPos, Quaternion.identity, gridContainer);
-        clone.name = "Cloned_Pepper";
+        clone.name = "ClonedPepper";
 
-        // 3. 스크립트 추가 및 레벨 설정
-        DraggablePepper clonedRank = clone.AddComponent<DraggablePepper>();
-        clonedRank.SetPepperLevel(original.pepperLevel);  // 원본과 동일한 레벨로 복제
+        DraggablePepper cloned = clone.AddComponent<DraggablePepper>();
+        cloned.SetPepperLevel(original.pepperLevel);
+        targetCell.SetRank(cloned);
 
-        // 4. 셀에 배치
-        targetCell.SetRank(clonedRank);
+        // 3. 원본 제거 (카운트 감소 포함)
+        if (original.currentCell != null)
+        {
+            original.currentCell.currentRank = null;
+        }
+
+        Destroy(original.gameObject);
+        DecreasePepperCount();  // 개수 관리까지 하면 완벽
+    }
+
+
+    /// <summary>
+    /// 외부에서 계급장 제거 시 카운트 감소
+    /// </summary>
+    public void DecreasePepperCount()
+    {
+        currentPepperCount = Mathf.Max(0, currentPepperCount - 1);
     }
 }
+
