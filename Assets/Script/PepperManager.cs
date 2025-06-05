@@ -1,64 +1,87 @@
 ﻿using UnityEngine;
+using System.Collections;
+
 
 public class PepperManager : MonoBehaviour
 {
-    [Header("필수 참조")]
-    public GridManager gridManager;          // 인스펙터에서 연결
-    public GameObject PepperPrefabs;         // 생성할 계급장 프리팹
-    public Transform gridContainer;          // 계급장 오브젝트의 부모
+    public GameObject pepperPrefab;
+    public int maxPepperCount = 20;
+    public float fixedY = 1f; // y축 고정
 
-    [Header("프리팹 생성 제한")]
-    public int maxPepperCount = 50;          // 최대 생성 가능한 수
-    private int currentPepperCount = 0;      // 현재까지 생성된 수
+    private int currentPepperCount = 0;
 
-    private void Awake()
+    public GridManager gridManager;
+
+    // 4개 중심 좌표 (x, z)
+    private Vector3[] spawnCenters = new Vector3[]
     {
+        new Vector3(-10f, 0f, 10f),
+        new Vector3(-10f, 0f, -10f),
+        new Vector3(10f, 0f, 10f),
+        new Vector3(10f, 0f, -10f)
+    };
+
+    private float spawnRange = 10f; // 중심 좌표에서 ±10 범위 (즉 20x20 영역)
+
+    private void Start()
+    {
+        StartCoroutine(SpawnRoutine());
+
         if (gridManager == null)
         {
             gridManager = FindObjectOfType<GridManager>();
         }
+
+
     }
 
-    /// <summary>
-    /// 클릭한 계급장 오브젝트를 복제하여 빈 셀에 생성한다.
-    /// </summary>
-    /// <param name="original">복제할 원본 계급장</param>
-    public void TryCloneAndReplace(DraggablePepper original)
+    private IEnumerator SpawnRoutine()
     {
-        // 1. 빈 셀 탐색
-        GridCell targetCell = gridManager.FindEmptyCell();
-        if (targetCell == null)
+        yield return new WaitForSeconds(3f); // 게임 시작 후 3초 대기
+
+        while (currentPepperCount < maxPepperCount)
         {
-            Debug.Log("빈 셀이 없습니다. 복제 불가");
+            for (int i = 0; i < spawnCenters.Length; i++)
+            {
+                if (currentPepperCount >= maxPepperCount)
+                    break;
+
+                Vector3 spawnPos = GetRandomPositionInArea(spawnCenters[i]);
+                SpawnPepperAtPosition(spawnPos);
+            }
+            yield return new WaitForSeconds(1f); // 1초마다 4개씩 소환
+        }
+
+        // 이후는 필요하면 다시 1초에 1개씩 생성하는 로직 추가 가능
+    }
+
+    private Vector3 GetRandomPositionInArea(Vector3 center)
+    {
+        float randomX = Random.Range(-spawnRange, spawnRange);
+        float randomZ = Random.Range(-spawnRange, spawnRange);
+        return new Vector3(center.x + randomX, fixedY, center.z + randomZ);
+    }
+
+    private void SpawnPepperAtPosition(Vector3 position)
+    {
+        Instantiate(pepperPrefab, position, Quaternion.identity);
+        currentPepperCount++;
+    }
+    public void TryClonePepper(DraggablePepper original)
+    {
+        // 예: 빈 칸 찾기
+        GridCell emptyCell = gridManager.FindEmptyCell();
+        if (emptyCell == null)
+        {
+            Debug.Log("빈 칸이 없습니다!");
             return;
         }
 
-        // 2. 복제 생성
-        Vector3 spawnPos = targetCell.transform.position;
-        GameObject clone = Instantiate(PepperPrefabs, spawnPos, Quaternion.identity, gridContainer);
-        clone.name = "ClonedPepper";
+        // 복제 생성
+        DraggablePepper clone = gridManager.CreateRankInCell(emptyCell, original.pepperLevel);
 
-        DraggablePepper cloned = clone.AddComponent<DraggablePepper>();
-        cloned.SetPepperLevel(original.pepperLevel);
-        targetCell.SetRank(cloned);
-
-        // 3. 원본 제거 (카운트 감소 포함)
-        if (original.currentCell != null)
-        {
-            original.currentCell.currentRank = null;
-        }
-
-        Destroy(original.gameObject);
-        DecreasePepperCount();  // 개수 관리까지 하면 완벽
-    }
-
-
-    /// <summary>
-    /// 외부에서 계급장 제거 시 카운트 감소
-    /// </summary>
-    public void DecreasePepperCount()
-    {
-        currentPepperCount = Mathf.Max(0, currentPepperCount - 1);
+        // 원본 삭제
+        gridManager.RemoveRank(original);
     }
 }
 

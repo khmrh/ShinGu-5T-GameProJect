@@ -70,12 +70,6 @@ public class DraggablePepper : MonoBehaviour
     }
     private void OnMouseDown()
     {
-        StartDragging();
-
-        // 기존 드래그 시작
-        StartDragging();
-
-        // 클릭 시 GameManager에 복제 요청
         FindObjectOfType<PepperManager>().TryClonePepper(this);
     }
     private void OnMouseUp()
