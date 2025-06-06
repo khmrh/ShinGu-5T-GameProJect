@@ -20,15 +20,15 @@ public class ShopSlot : MonoBehaviour
         icon.sprite = ability.icon;
     }
 
-    public void OnClickPurchase()
-    {
-        if (Player.Instance.gold >= ability.currentPrice)
-        {
-            Player.Instance.gold -= ability.currentPrice;
-            ability.Purchase();
-            priceText.text = ability.currentPrice.ToString();
-        }
-    }
+    //public void OnClickPurchase()
+ //   {
+       // if (Player.Instance.gold >= ability.currentPrice)
+   //     {
+       //     Player.Instance.gold -= ability.currentPrice;
+       //     ability.Purchase();
+       //     priceText.text = ability.currentPrice.ToString();
+     //   }
+  //  }
 }
  
 
