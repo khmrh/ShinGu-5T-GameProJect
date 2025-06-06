@@ -2,23 +2,23 @@
 
 public class DraggablePepper : MonoBehaviour
 {
-    public int pepperLevel = 1;                                        //계급장 레벨
-    public float dragSpeed = 25f;                                    //선형 보간 이동 속도
+    public int pepperLevel = 1;                                        // 계급장 레벨
+    public float dragSpeed = 25f;                                      // 선형 보간 이동 속도
 
-    public bool isDragging = false;                                  //현재 드래그 중인지
-    public bool isReturning = false;                                // 현재 돌아가는 중인지
-    public bool isMovingToCell = false;                             // 현재 셀로 이동 중인지
-    public GridCell targetMoveCell;                                 // 이동 목표 셀
-    public Vector3 originalPosition;                                 //원래 위치
-    public GridCell currentCell;                                     //현재 위치한 칸
+    public bool isDragging = false;                                    // 현재 드래그 중인지
+    public bool isReturning = false;                                   // 현재 돌아가는 중인지
+    public bool isMovingToCell = false;                                // 현재 셀로 이동 중인지
+    public GridCell targetMoveCell;                                    // 이동 목표 셀
+    public Vector3 originalPosition;                                   // 원래 위치
+    public GridCell currentCell;                                       // 현재 위치한 칸
 
-    public Camera mainCamera;                                        //메인 카메라
-    public Vector3 dragOffset;                                       //드래그 시 오프셋 (보정값)
-    public SpriteRenderer spriteRenderer;                            //계급장 이미지 렌더러
-    public GridManager gridManager;                                   //게임 메니저
-    public Collider2D pepperCollider;                                // 콜라이더 참조
+    public Camera mainCamera;                                          // 메인 카메라
+    public Vector3 dragOffset;                                         // 드래그 시 오프셋 (보정값)
+    public SpriteRenderer spriteRenderer;                              // 계급장 이미지 렌더러
+    public GridManager gridManager;                                    // 게임 매니저
+    public Collider2D pepperCollider;                                  // 콜라이더 참조
 
-    public PepperManager pepperManager;
+    public PepperManager pepperManager;                                // PepperManager 연결
 
     private void Awake()
     {
@@ -28,7 +28,33 @@ public class DraggablePepper : MonoBehaviour
         pepperCollider = GetComponent<Collider2D>();
         if (pepperCollider == null)
         {
-            Debug.Log("이 오브젝트에 Collider2D 없음.");
+            Debug.LogWarning("이 오브젝트에 Collider2D 없음.");
+        }
+
+        if (spriteRenderer == null)
+            spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    public void SetPepperLevel(int level)
+    {
+        pepperLevel = level;
+
+        if (gridManager != null && gridManager.PepperSprites.Length > level - 1)
+        {
+            spriteRenderer.sprite = gridManager.PepperSprites[level - 1];    // 레벨에 맞는 스프라이트로 변경
+        }
+    }
+
+    // 추가: 특정 스프라이트로 변경하는 메서드
+    public void SetSprite(Sprite sprite)
+    {
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.sprite = sprite;
+        }
+        else
+        {
+            Debug.LogWarning("SpriteRenderer가 없습니다.");
         }
     }
 
@@ -39,7 +65,6 @@ public class DraggablePepper : MonoBehaviour
 
     void Update()
     {
-
         if (isDragging)
         {
             transform.position = GetMouseWorldPosition() + dragOffset;
@@ -70,23 +95,32 @@ public class DraggablePepper : MonoBehaviour
             }
         }
     }
+
     private void OnMouseDown()
     {
-        // 클릭 시 복제 + 제거
-        if (pepperManager != null)
-        {
-            pepperManager.OnPepperDestroyed(gameObject);
-        }
+        // 그리드 안에 있는 페퍼만 드래그 혹은 삭제
+        if (transform.parent != gridManager.gridContainer.transform)
+            return;
 
-        Destroy(gameObject); // 제거
+        if (currentCell == null)
+        {
+            if (pepperManager != null)
+            {
+                pepperManager.OnOutsidePepperDestroyed(gameObject);
+            }
+            Destroy(gameObject);
+        }
+        else
+        {
+            StartDragging();
+        }
     }
+
     private void OnMouseUp()
     {
         if (!isDragging) return;
         StopDragging();
     }
- 
-
 
     void StartDragging()
     {
@@ -121,21 +155,19 @@ public class DraggablePepper : MonoBehaviour
         }
     }
 
-    public void MoveToCell(GridCell targetCell)    //특정 칸으로 이동
+    public void MoveToCell(GridCell targetCell)
     {
         if (currentCell != null)
-        {
-            currentCell.currentRank = null; //기존 칸에서 제거
-        }
+            currentCell.currentRank = null;
 
         isMovingToCell = true;
         targetMoveCell = targetCell;
         targetCell.currentRank = this;
         currentCell = targetCell;
-        originalPosition = new Vector3(targetCell.transform.position.x, targetCell.transform.position.y, 0f);
+        originalPosition = targetCell.transform.position;
     }
 
-    public void ReturnToOriginalPosition() //원래 위치로 돌아가는 함수
+    public void ReturnToOriginalPosition()
     {
         isReturning = true;
     }
@@ -144,29 +176,19 @@ public class DraggablePepper : MonoBehaviour
     {
         if (currentCell != null)
         {
-            currentCell.currentRank = null; //기존 칸에서 제거
+            currentCell.currentRank = null; // 기존 칸에서 제거
         }
 
         gridManager.MergeRanks(this, targetCell.currentRank);
     }
 
-    public Vector3 GetMouseWorldPosition()                                        //마우스 월드 좌표 구하기
+    public Vector3 GetMouseWorldPosition()
     {
         Vector3 mousePos = Input.mousePosition;
         mousePos.z = -mainCamera.transform.position.z;
         return mainCamera.ScreenToWorldPoint(mousePos);
     }
 
-    public void SetPepperLevel(int level)
-    {
-        pepperLevel = level;
 
-        if (gridManager != null && gridManager.PepperSprites.Length > level - 1)
-        {
-            spriteRenderer.sprite = gridManager.PepperSprites[level - 1];    //레벨에 맞는 스프라이트로 변경
-        }
-    }
-
-  
 
 }

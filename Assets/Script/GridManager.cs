@@ -36,6 +36,26 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    public DraggablePepper CreateRankInCellBySprite(Sprite sprite)
+    {
+        GridCell emptyCell = FindEmptyCell();
+        if (emptyCell == null) return null;
+
+        Vector3 rankPosition = emptyCell.transform.position;
+
+        GameObject pepperObj = Instantiate(PepperPrefabs, rankPosition, Quaternion.identity, gridContainer);
+        pepperObj.name = "Pepper_Sprite";
+
+        DraggablePepper rank = pepperObj.AddComponent<DraggablePepper>();
+
+        // DraggablePepper에 스프라이트 세팅 함수 필요
+        rank.SetSprite(sprite);
+
+        emptyCell.SetRank(rank);
+
+        return rank;
+    }
+
     void InitializeGrid()                                           // 그리드 초기화
     {
         grid = new GridCell[gridWidth, gridHeight];                 // 지정된 크기의 2차원 배열 생성
@@ -223,6 +243,20 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    public bool SpawnPepperBySprite(Sprite sprite)
+    {
+        if (sprite == null) return false;
+
+        DraggablePepper newRank = CreateRankInCellBySprite(sprite);
+        if (newRank == null)
+        {
+            Debug.Log("빈 셀이 없어 생성 실패");
+            return false;
+        }
+
+        Debug.Log("그리드에 스프라이트 페퍼 생성 완료");
+        return true;
+    }
 
 
 }
