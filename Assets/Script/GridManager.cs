@@ -17,6 +17,8 @@ public class GridManager : MonoBehaviour
     public GameObject PepperPrefabs;                                 // Pepper 프리팹
     public Sprite[] PepperSprites;                                   // 각 레벨별 Pepper 이미지
 
+    [Header("점수 시스템")]
+    public ScoreManager scoreManager;                                // ScoreManager 연결
 
     public GridCell[,] grid;
 
@@ -182,6 +184,12 @@ public class GridManager : MonoBehaviour
             return;
         }
 
+        if (scoreManager != null)
+        {
+            int points = GetScoreForLevel(newLevel);
+            scoreManager.AddScore(points);
+        }
+
         // 타겟 랭크의 레벨을 증가시키고 드래그한 랭크 제거
         targetRank.SetPepperLevel(newLevel);
         RemoveRank(draggedRank);
@@ -198,4 +206,23 @@ public class GridManager : MonoBehaviour
             Destroy(rank.gameObject);
         }
     }
+
+    // 병합된 Pepper의 레벨에 따라 점수를 반환하는 함수(좀수는 일딴 적어둔 거임)
+    private int GetScoreForLevel(int level)
+    {
+        switch (level)
+        {
+            case 2: return 50;     // 레벨 2로 병합되면 50점
+            case 3: return 100;    // 레벨 3으로 병합되면 100점
+            case 4: return 200;    // 레벨 4으로 병합되면 200점
+            case 5: return 400;    // 레벨 5으로 병합되면 800점
+            case 6: return 800;    // 레벨 6으로 병합되면 800점
+            case 7: return 1600;
+            case 8: return 3200;
+            default: return 0;     // 정의되지 않은 레벨은 점수 없음
+        }
+    }
+
+
+
 }
