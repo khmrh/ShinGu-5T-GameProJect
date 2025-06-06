@@ -1,87 +1,88 @@
-﻿using UnityEngine;
-using System.Collections;
-
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class PepperManager : MonoBehaviour
 {
+    [Header("설정")]
     public GameObject pepperPrefab;
+    public Transform[] spawnAreas; // 4개의 큐브 (스폰 판넬)
+
+    [Range(0f, 1f)] public float spawnYOffset = 0.5f;
+
     public int maxPepperCount = 20;
-    public float fixedY = 1f; // y축 고정
 
-    private int currentPepperCount = 0;
+    private List<GameObject> spawnedPeppers = new List<GameObject>();
 
-    public GridManager gridManager;
-
-    // 4개 중심 좌표 (x, z)
-    private Vector3[] spawnCenters = new Vector3[]
-    {
-        new Vector3(-10f, 0f, 10f),
-        new Vector3(-10f, 0f, -10f),
-        new Vector3(10f, 0f, 10f),
-        new Vector3(10f, 0f, -10f)
-    };
-
-    private float spawnRange = 10f; // 중심 좌표에서 ±10 범위 (즉 20x20 영역)
-
-    private void Start()
+    void Start()
     {
         StartCoroutine(SpawnRoutine());
-
-        if (gridManager == null)
-        {
-            gridManager = FindObjectOfType<GridManager>();
-        }
-
-
     }
 
     private IEnumerator SpawnRoutine()
     {
-        yield return new WaitForSeconds(3f); // 게임 시작 후 3초 대기
+        yield return new WaitForSeconds(3f); // 시작 후 3초 대기
 
-        while (currentPepperCount < maxPepperCount)
+        while (true)
         {
-            for (int i = 0; i < spawnCenters.Length; i++)
+            while (spawnedPeppers.Count < maxPepperCount)
             {
-                if (currentPepperCount >= maxPepperCount)
-                    break;
+                int spawnCount = Mathf.Min(4, maxPepperCount - spawnedPeppers.Count);
 
-                Vector3 spawnPos = GetRandomPositionInArea(spawnCenters[i]);
-                SpawnPepperAtPosition(spawnPos);
+                for (int i = 0; i < spawnCount; i++)
+                {
+                    Transform area = spawnAreas[i % spawnAreas.Length];
+                    Vector3 randomPos = GetRandomPointOnCube(area);
+
+                    GameObject pepper = Instantiate(pepperPrefab, randomPos, Quaternion.identity);
+                    pepper.GetComponent<DraggablePepper>().pepperManager = this;
+                    spawnedPeppers.Add(pepper);
+                }
+
+                yield return new WaitForSeconds(1f); // 1초마다 4개씩
             }
-            yield return new WaitForSeconds(1f); // 1초마다 4개씩 소환
+
+            yield return null;
         }
-
-        // 이후는 필요하면 다시 1초에 1개씩 생성하는 로직 추가 가능
     }
 
-    private Vector3 GetRandomPositionInArea(Vector3 center)
+    private Vector3 GetRandomPointOnCube(Transform cube)
     {
-        float randomX = Random.Range(-spawnRange, spawnRange);
-        float randomZ = Random.Range(-spawnRange, spawnRange);
-        return new Vector3(center.x + randomX, fixedY, center.z + randomZ);
+        Vector3 center = cube.position;
+        Vector3 scale = cube.localScale;
+
+        float width = scale.x * 4.7f;
+        float depth = scale.z * 6.7f;
+
+        float halfX = width / 2f;
+        float halfZ = depth / 2f;
+
+        float randX = Random.Range(-halfX, halfX);
+        float randZ = Random.Range(-halfZ, halfZ);
+
+        return new Vector3(center.x + randX, center.y + spawnYOffset, center.z + randZ);
     }
 
-    private void SpawnPepperAtPosition(Vector3 position)
+    public void OnPepperDestroyed(GameObject pepper)
     {
-        Instantiate(pepperPrefab, position, Quaternion.identity);
-        currentPepperCount++;
-    }
-    public void TryClonePepper(DraggablePepper original)
-    {
-        // 예: 빈 칸 찾기
-        GridCell emptyCell = gridManager.FindEmptyCell();
-        if (emptyCell == null)
+        if (spawnedPeppers.Contains(pepper))
         {
-            Debug.Log("빈 칸이 없습니다!");
-            return;
+            spawnedPeppers.Remove(pepper);
+            StartCoroutine(RespawnAfterDelay());
         }
+    }
 
-        // 복제 생성
-        DraggablePepper clone = gridManager.CreateRankInCell(emptyCell, original.pepperLevel);
+    private IEnumerator RespawnAfterDelay()
+    {
+        yield return new WaitForSeconds(1f);
+        if (spawnedPeppers.Count < maxPepperCount)
+        {
+            Transform area = spawnAreas[Random.Range(0, spawnAreas.Length)];
+            Vector3 spawnPos = GetRandomPointOnCube(area);
 
-        // 원본 삭제
-        gridManager.RemoveRank(original);
+            GameObject newPepper = Instantiate(pepperPrefab, spawnPos, Quaternion.identity);
+            newPepper.GetComponent<DraggablePepper>().pepperManager = this;
+            spawnedPeppers.Add(newPepper);
+        }
     }
 }
-

@@ -18,6 +18,8 @@ public class DraggablePepper : MonoBehaviour
     public GridManager gridManager;                                   //게임 메니저
     public Collider2D pepperCollider;                                // 콜라이더 참조
 
+    public PepperManager pepperManager;
+
     private void Awake()
     {
         mainCamera = Camera.main;
@@ -70,7 +72,13 @@ public class DraggablePepper : MonoBehaviour
     }
     private void OnMouseDown()
     {
-        FindObjectOfType<PepperManager>().TryClonePepper(this);
+        // 클릭 시 복제 + 제거
+        if (pepperManager != null)
+        {
+            pepperManager.OnPepperDestroyed(gameObject);
+        }
+
+        Destroy(gameObject); // 제거
     }
     private void OnMouseUp()
     {

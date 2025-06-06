@@ -122,6 +122,111 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &225010749
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 225010753}
+  - component: {fileID: 225010752}
+  - component: {fileID: 225010751}
+  - component: {fileID: 225010750}
+  m_Layer: 0
+  m_Name: PepperSpown
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!65 &225010750
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 225010749}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &225010751
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 225010749}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &225010752
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 225010749}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &225010753
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 225010749}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -9.1011, y: -0.1155, z: -2.0285811}
+  m_LocalScale: {x: 4.7, y: 6.7, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &264462305
 GameObject:
   m_ObjectHideFlags: 0
@@ -636,22 +741,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba907a6de4715bb4abbc379788252a3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridWidth: 7
-  gridHeight: 7
-  cellSize: 1.05
-  cellPrefabs: {fileID: 2040788712619881408, guid: 4ed53792a7117ef4391d0caab90d508a, type: 3}
-  gridContainer: {fileID: 1135864514}
-  maxPepperLevel: 7
-  PepperPrefabs: {fileID: 2251339097683653993, guid: 03adcafa03185a14a84bfe79a3a7dd69, type: 3}
-  PepperSprites:
-  - {fileID: 21300000, guid: ada66ade0b558d34bb9906b023205cf4, type: 3}
-  - {fileID: 21300000, guid: 7dde8925ce6ce6f4093ea0918f3b2d33, type: 3}
-  - {fileID: 21300000, guid: 5f3c2d4da698c2140a2f4b2aef47a1bc, type: 3}
-  - {fileID: 21300000, guid: 050e6c9eff06a85458491f7fceffe7f6, type: 3}
-  - {fileID: 21300000, guid: 3416db1e0d805aa459f0057c420b4e4a, type: 3}
-  - {fileID: 21300000, guid: a04c77b1d05530b4d8bb9cef62977f65, type: 3}
-  - {fileID: 21300000, guid: 897236eb52819d547b2a400c6d39bb3f, type: 3}
-  scoreManager: {fileID: 0}
 --- !u!4 &1100618863
 Transform:
   m_ObjectHideFlags: 0
@@ -679,10 +768,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b309a7fbc5b610c4383826af4eca8889, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TimerText: {fileID: 546916418}
-  RoundText: {fileID: 1829106383}
-  CoinText: {fileID: 1233290189}
-  ScoreText: {fileID: 607145784}
 --- !u!114 &1100618865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -695,10 +780,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73ff697b380a31d43a3e078da941fc3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pepperPrefab: {fileID: 2251339097683653993, guid: 03adcafa03185a14a84bfe79a3a7dd69, type: 3}
-  maxPepperCount: 20
-  fixedY: 1
-  gridManager: {fileID: 1100618862}
 --- !u!1 &1135864513
 GameObject:
   m_ObjectHideFlags: 0
@@ -2481,3 +2562,4 @@ SceneRoots:
   - {fileID: 1142687724}
   - {fileID: 264462307}
   - {fileID: 1838445193}
+  - {fileID: 225010753}

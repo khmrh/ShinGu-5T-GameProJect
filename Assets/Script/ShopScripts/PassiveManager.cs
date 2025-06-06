@@ -24,9 +24,9 @@ public class PassiveManager : MonoBehaviour
         ApplyIngredientSlow();
     }
 
-    private void ApplyExtraTime()       
+    private void ApplyExtraTime()
     {
-           //제한 시간 증가 함수
+        //제한 시간 증가 함수
     }
 
     private void ApplyIngredientSlow()
@@ -34,19 +34,19 @@ public class PassiveManager : MonoBehaviour
         //날라댕기는 날파리들 둔화
     }
 
-    public int ApplyScoreBonus(int baseScore)
-    {
+   //public int ApplyScoreBonus(int baseScore)
+   // {
         //종료시 스코어 증가 함수
-    }
+   // }
 
-    public int ApplyGoldBonus(int score)
-    {
+   // public int ApplyGoldBonus(int score)
+   // {
         //종료시 골드 증가 함수
-    }
+   // }
 
-    public bool ShouldSpawnHigherGradeMaterial()
-    {
+  //  public bool ShouldSpawnHigherGradeMaterial()
+   // {
         //기본 생성 등급 증가 함수
-    }
+    //}
 }
 
