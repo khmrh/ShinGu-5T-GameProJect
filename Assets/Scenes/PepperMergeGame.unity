@@ -394,7 +394,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8d7e81232b9526f46a9793051150368c, type: 2}
   m_sharedMaterial: {fileID: 4128502945389843465, guid: 8d7e81232b9526f46a9793051150368c, type: 2}
@@ -528,7 +528,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8d7e81232b9526f46a9793051150368c, type: 2}
   m_sharedMaterial: {fileID: 4128502945389843465, guid: 8d7e81232b9526f46a9793051150368c, type: 2}
@@ -651,6 +651,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 3416db1e0d805aa459f0057c420b4e4a, type: 3}
   - {fileID: 21300000, guid: a04c77b1d05530b4d8bb9cef62977f65, type: 3}
   - {fileID: 21300000, guid: 897236eb52819d547b2a400c6d39bb3f, type: 3}
+  scoreManager: {fileID: 0}
 --- !u!4 &1100618863
 Transform:
   m_ObjectHideFlags: 0
@@ -694,7 +695,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73ff697b380a31d43a3e078da941fc3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pepperPrefab: {fileID: 0}
+  pepperPrefab: {fileID: 2251339097683653993, guid: 03adcafa03185a14a84bfe79a3a7dd69, type: 3}
   maxPepperCount: 20
   fixedY: 1
   gridManager: {fileID: 1100618862}
@@ -854,7 +855,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8d7e81232b9526f46a9793051150368c, type: 2}
   m_sharedMaterial: {fileID: 4128502945389843465, guid: 8d7e81232b9526f46a9793051150368c, type: 2}
@@ -1080,7 +1081,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8d7e81232b9526f46a9793051150368c, type: 2}
   m_sharedMaterial: {fileID: 4128502945389843465, guid: 8d7e81232b9526f46a9793051150368c, type: 2}
