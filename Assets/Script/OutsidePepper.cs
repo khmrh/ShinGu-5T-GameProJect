@@ -3,8 +3,6 @@ using UnityEngine;
 public class OutsidePepper : MonoBehaviour
 {
     public Sprite pepperSprite;
- 
-
     public int pepperLevel = 1;  // 기본값 1로 명확히 초기화
 
     [HideInInspector]
@@ -21,19 +19,23 @@ public class OutsidePepper : MonoBehaviour
     {
         if (pepperManager != null)
         {
-            pepperManager.HandleOutsidePepperClicked(pepperLevel, pepperSprite); // level도 같이 전달
-            Destroy(gameObject); // 외부 페퍼는 클릭 후 제거
+            pepperManager.HandleOutsidePepperClicked(pepperSprite);  // 스프라이트 전달
+            pepperManager.OnOutsidePepperDestroyed(gameObject);      // 리스트에서 제거
+            Destroy(gameObject);                                     // 삭제
         }
     }
+
 
     public void SetPepper(int level, Sprite sprite)
     {
         pepperLevel = level;
         pepperSprite = sprite;
 
-        // 그리고 SpriteRenderer에도 반영
-        var sr = GetComponent<SpriteRenderer>();
-        if (sr != null)
-            sr.sprite = sprite;
+        // SpriteRenderer에 스프라이트 적용
+        if (spriteRenderer == null)
+            spriteRenderer = GetComponent<SpriteRenderer>();
+
+        if (spriteRenderer != null)
+            spriteRenderer.sprite = sprite;
     }
 }

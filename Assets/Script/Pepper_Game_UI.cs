@@ -1,14 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class Rsank_Game_UI : MonoBehaviour
+public class Pepper_Game_UI : MonoBehaviour
 {
     public TextMeshProUGUI TimerText;
     public TextMeshProUGUI RoundText;
     public TextMeshProUGUI CoinText;
     public TextMeshProUGUI ScoreText;
+    public TextMeshProUGUI TargetScoreText; // 목표 점수 텍스트 (선택)
 
     private float timer;
     private int round;
@@ -23,9 +22,13 @@ public class Rsank_Game_UI : MonoBehaviour
         ScoreText.text = "현재 점수 : " + score.ToString();
     }
 
-    // 외부에서 값을 갱신하는 public 함수
     public void UpdateTimer(float time) => timer = time;
     public void UpdateRound(int r) => round = r;
     public void UpdateCoin(int c) => coin = c;
     public void UpdateScore(int s) => score = s;
+    public void UpdateTargetScore(int target)
+    {
+        if (TargetScoreText != null)
+            TargetScoreText.text = "목표 점수 : " + target.ToString();
+    }
 }

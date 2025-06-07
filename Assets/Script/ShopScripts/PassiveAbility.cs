@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class PassiveAbility
 {
-    public PassiveType type;
+    public PassiveTypes type;
     public string name;
     public string description;
     public Sprite icon;
