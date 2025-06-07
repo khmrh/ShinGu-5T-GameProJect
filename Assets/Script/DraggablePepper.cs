@@ -104,17 +104,14 @@ public class DraggablePepper : MonoBehaviour
 
         if (currentCell == null)
         {
-            if (pepperManager != null)
-            {
-                pepperManager.OnOutsidePepperDestroyed(gameObject);
-            }
-            Destroy(gameObject);
+            Destroy(gameObject); // 외부에서 생성된 상태인데 그리드 연결 안 된 경우
         }
         else
         {
             StartDragging();
         }
     }
+
 
     private void OnMouseUp()
     {
