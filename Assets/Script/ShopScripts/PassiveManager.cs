@@ -12,41 +12,70 @@ public class PassiveManager : MonoBehaviour
         if (Instance == null) Instance = this;
     }
 
-    public float GetBonus(PassiveTypes type)
+    public float GetBonus(PassiveType type)
     {
         var ability = abilities.Find(a => a.type == type);
         return ability != null ? ability.GetTotalValue() : 0f;
     }
 
+    /// <summary>
+    /// 라운드 시작 시 적용되는 능력들
+    /// </summary>
     public void ApplyPassivesAtRoundStart()
     {
         ApplyExtraTime();
         ApplyIngredientSlow();
     }
 
+    /// <summary>
+    /// 능력 1. 제한 시간 증가
+    /// </summary>
     private void ApplyExtraTime()
     {
-        //제한 시간 증가 함수
+        // TODO: 제한 시간 증가 적용
     }
 
+    /// <summary>
+    /// 능력 2. 재료 이동 속도 둔화
+    /// </summary>
     private void ApplyIngredientSlow()
     {
-        //날라댕기는 날파리들 둔화
+        // TODO: 재료 이동 속도 감소 적용
     }
 
-   //public int ApplyScoreBonus(int baseScore)
-   // {
-        //종료시 스코어 증가 함수
-   // }
+    /// <summary>
+    /// 능력 3. 점수 획득량 증가
+    /// </summary>
+    public int ApplyScoreBonus(int baseScore)
+    {
+        // TODO: 점수 증가 적용
+        return baseScore;
+    }
 
-   // public int ApplyGoldBonus(int score)
-   // {
-        //종료시 골드 증가 함수
-   // }
+    /// <summary>
+    /// 능력 4. 골드 획득량 증가
+    /// </summary>
+    public int ApplyGoldBonus(int score)
+    {
+        // TODO: 골드 증가 적용
+        return Mathf.RoundToInt(score * 0.1f); // 기본 환산 비율
+    }
 
-  //  public bool ShouldSpawnHigherGradeMaterial()
-   // {
-        //기본 생성 등급 증가 함수
-    //}
+    /// <summary>
+    /// 능력 5. 고등급 재료 등장 확률 증가
+    /// </summary>
+    public bool ShouldSpawnHigherGradeMaterial()
+    {
+        // TODO: 고등급 재료 확률 계산
+        return false;
+    }
+
+    /// <summary>
+    /// 능력 구매 시 처리
+    /// </summary>
+    public void Purchase(PassiveAbility ability)
+    {
+        ability.Purchase();
+        Debug.Log($"[상점] {ability.name} 구매 완료 → 총 {ability.timesPurchased}회");
+    }
 }
-
