@@ -44,14 +44,15 @@ public class GameTimerManager : MonoBehaviour
             int goalScore = scoreManager.CalculateTargetScore(scoreManager.round);
             int currentScore = scoreManager.currentScore;
             int coin = scoreManager.coin;
+            int round = scoreManager.round; // ✅ round 추가
 
             if (scoreManager.IsGoalReached())
             {
-                resultUI.ShowSuccess(goalScore, currentScore, coin);
+                resultUI.ShowSuccess(goalScore, currentScore, coin, round); // ✅ 인자 4개 전달
             }
             else
             {
-                resultUI.ShowFail(goalScore, currentScore, coin);
+                resultUI.ShowFail(goalScore, currentScore, coin, round);    // ✅ 인자 4개 전달
             }
         }
         else
@@ -59,6 +60,7 @@ public class GameTimerManager : MonoBehaviour
             Debug.LogWarning("resultUI 혹은 scoreManager가 연결되지 않음");
         }
     }
+
 
     public void ResetTimer()
     {
