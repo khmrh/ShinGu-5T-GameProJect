@@ -20,6 +20,8 @@ public class DraggablePepper : MonoBehaviour
 
     public PepperManager pepperManager;                                // PepperManager 연결
 
+    public bool isInteractable = true;                                 // 상호작용 가능 여부
+
     private void Awake()
     {
         mainCamera = Camera.main;
@@ -98,13 +100,15 @@ public class DraggablePepper : MonoBehaviour
 
     private void OnMouseDown()
     {
-        // 그리드 안에 있는 페퍼만 드래그 혹은 삭제
+        if (!isInteractable || (pepperManager != null && !pepperManager.isRoundActive))
+            return;
+
         if (transform.parent != gridManager.gridContainer.transform)
             return;
 
         if (currentCell == null)
         {
-            Destroy(gameObject); // 외부에서 생성된 상태인데 그리드 연결 안 된 경우
+            Destroy(gameObject);
         }
         else
         {
@@ -112,13 +116,13 @@ public class DraggablePepper : MonoBehaviour
         }
     }
 
-
     private void OnMouseUp()
     {
-        if (!isDragging) return;
+        if (!isDragging || (pepperManager != null && !pepperManager.isRoundActive))
+            return;
+
         StopDragging();
     }
-
     void StartDragging()
     {
         isDragging = true;
@@ -128,6 +132,9 @@ public class DraggablePepper : MonoBehaviour
 
     void StopDragging()
     {
+        if (!isInteractable || (pepperManager != null && !pepperManager.isRoundActive))
+            return;
+
         isDragging = false;
         spriteRenderer.sortingOrder = 5;
         GridCell targetCell = gridManager.FindClosestCell(transform.position);
@@ -171,9 +178,12 @@ public class DraggablePepper : MonoBehaviour
 
     public void MergeWithCell(GridCell targetCell)
     {
+        if (!isInteractable || (pepperManager != null && !pepperManager.isRoundActive))
+            return;
+
         if (currentCell != null)
         {
-            currentCell.currentRank = null; // 기존 칸에서 제거
+            currentCell.currentRank = null;
         }
 
         gridManager.MergeRanks(this, targetCell.currentRank);
@@ -185,7 +195,6 @@ public class DraggablePepper : MonoBehaviour
         mousePos.z = -mainCamera.transform.position.z;
         return mainCamera.ScreenToWorldPoint(mousePos);
     }
-
 
 
 }

@@ -9,6 +9,7 @@ public class GameTimerManager : MonoBehaviour
     public Pepper_Game_UI gameUI;
     public GameResultUI resultUI;
     public ScoreManager scoreManager;  // ScoreManager 직접 연결
+    public PepperManager pepperManager; // PepperManager 연결
 
     void Start()
     {
@@ -18,6 +19,15 @@ public class GameTimerManager : MonoBehaviour
 
         if (scoreManager == null)
             scoreManager = FindObjectOfType<ScoreManager>();
+
+        if (pepperManager == null)
+            pepperManager = FindObjectOfType<PepperManager>();
+
+        // 게임 시작 시 라운드 활성화
+        if (pepperManager != null)
+        {
+            pepperManager.isRoundActive = true;
+        }
     }
 
     void Update()
@@ -39,20 +49,26 @@ public class GameTimerManager : MonoBehaviour
         isGameOver = true;
         Debug.Log("게임 종료");
 
+        // 라운드 비활성화 → 페퍼 움직임 및 클릭 제한
+        if (pepperManager != null)
+        {
+            pepperManager.isRoundActive = false;
+        }
+
         if (resultUI != null && scoreManager != null)
         {
             int goalScore = scoreManager.CalculateTargetScore(scoreManager.round);
             int currentScore = scoreManager.currentScore;
             int coin = scoreManager.coin;
-            int round = scoreManager.round; // ✅ round 추가
+            int round = scoreManager.round; //  round 추가
 
             if (scoreManager.IsGoalReached())
             {
-                resultUI.ShowSuccess(goalScore, currentScore, coin, round); // ✅ 인자 4개 전달
+                resultUI.ShowSuccess(goalScore, currentScore, coin, round); //  인자 4개 전달
             }
             else
             {
-                resultUI.ShowFail(goalScore, currentScore, coin, round);    // ✅ 인자 4개 전달
+                resultUI.ShowFail(goalScore, currentScore, coin, round);    //  인자 4개 전달
             }
         }
         else
@@ -67,6 +83,13 @@ public class GameTimerManager : MonoBehaviour
         remainingTime = gameDuration;
         isGameOver = false;
         gameUI?.UpdateTimer(remainingTime);
+
+        // 라운드 다시 활성화
+        if (pepperManager != null)
+        {
+            pepperManager.isRoundActive = true;
+        }
+
         Debug.Log("타이머 리셋 완료");
     }
 

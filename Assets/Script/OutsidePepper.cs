@@ -17,6 +17,12 @@ public class OutsidePepper : MonoBehaviour
 
     void OnMouseDown()
     {
+        if (pepperManager != null && !pepperManager.isRoundActive)
+        {
+            Debug.Log("라운드 종료로 클릭 불가");
+            return;
+        }
+
         if (pepperManager != null)
         {
             pepperManager.HandleOutsidePepperClicked(pepperSprite);  // 스프라이트 전달

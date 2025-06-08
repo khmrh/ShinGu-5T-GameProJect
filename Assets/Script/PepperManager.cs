@@ -15,12 +15,18 @@ public class PepperManager : MonoBehaviour
 
     private List<GameObject> spawnedOutsidePeppers = new List<GameObject>();  // 현재 존재하는 밖 페퍼들 리스트
 
+    public GameObject spawnerObject;
+
+    [HideInInspector]
+    public bool isRoundActive = true;  // 라운드가 진행 중인지 상태
+
+    
+
+
     void Start()
     {
         StartCoroutine(ContinuousOutsidePepperSpawner());  // 계속 페퍼 관리 루틴 시작
     }
-
-    // -------------------- 밖 페퍼 관리 --------------------
 
     // 1초에 1개씩 밖 페퍼를 생성하며, 최대 개수 유지
     private IEnumerator ContinuousOutsidePepperSpawner()
@@ -29,7 +35,7 @@ public class PepperManager : MonoBehaviour
 
         while (true)
         {
-            if (spawnedOutsidePeppers.Count < maxOutsidePepperCount)
+            if (isRoundActive && spawnedOutsidePeppers.Count < maxOutsidePepperCount)
             {
                 SpawnOneOutsidePepper();  // 1개 생성
             }
@@ -44,6 +50,10 @@ public class PepperManager : MonoBehaviour
         Vector3 spawnPos = GetSpawnPosition(spawnArea);
 
         GameObject pepper = Instantiate(pepperPrefab, spawnPos, Quaternion.identity);
+
+        PepperMovement pm = pepper.GetComponent<PepperMovement>();
+        pm.SetSpawnAreaFromObject(spawnerObject);
+        pm.pepperManager = this;  // PepperMovement에 pepperManager 연결 (아래에서 추가 예정)
 
         OutsidePepper outside = pepper.GetComponent<OutsidePepper>();
         if (outside == null)
@@ -70,11 +80,15 @@ public class PepperManager : MonoBehaviour
         Debug.Log("Outside Pepper Destroyed: " + outsidePepper.name);
     }
 
-    // -------------------- 그리드 안에 페퍼 소환 --------------------
-
-    // 밖 페퍼 클릭 시 그리드에 생성 요청
+    // 밖 페퍼 클릭 시 그리드에 생성 요청 (라운드 진행중일 때만)
     public void HandleOutsidePepperClicked(Sprite sprite)
     {
+        if (!isRoundActive)
+        {
+            Debug.Log("라운드 종료, 밖 페퍼 클릭 무시");
+            return;
+        }
+
         bool success = gridManager.SpawnPepperBySprite(sprite);
 
         if (!success)
@@ -110,11 +124,11 @@ public class PepperManager : MonoBehaviour
         {
             newPepper.transform.SetParent(emptyCell.transform);
             newPepper.transform.localPosition = Vector3.zero;
-            newPepper.pepperManager = this;
+
+            newPepper.pepperManager = this; // 🔥 여기 반드시 추가!
         }
     }
 
-    // -------------------- 유틸 --------------------
 
     // 밖 페퍼 생성 위치 결정 (랜덤한 X, Y, Z는 앞쪽)
     private Vector3 GetSpawnPosition(Transform area)
@@ -128,4 +142,46 @@ public class PepperManager : MonoBehaviour
 
         return new Vector3(randomX, randomY, z);
     }
+
+    public void OnRoundEnd()
+    {
+        isRoundActive = false;
+
+        // 밖 페퍼 정지 및 클릭 차단
+        foreach (var pepper in spawnedOutsidePeppers)
+        {
+            if (pepper != null)
+            {
+                var pm = pepper.GetComponent<PepperMovement>();
+                if (pm != null)
+                    pm.enabled = false;
+
+                var collider = pepper.GetComponent<Collider2D>();
+                if (collider != null)
+                    collider.enabled = false;
+            }
+        }
+
+        // 그리드 안 페퍼 클릭 차단
+        DisableGridPepperInteraction();
+    }
+
+
+
+    public void DisableGridPepperInteraction()
+    {
+        for (int x = 0; x < gridManager.gridWidth; x++)
+        {
+            for (int y = 0; y < gridManager.gridHeight; y++)
+            {
+                var cell = gridManager.grid[x, y];
+                if (cell != null && cell.currentRank != null)
+                {
+                    cell.currentRank.isInteractable = false;
+                }
+            }
+        }
+    }
+
+  
 }

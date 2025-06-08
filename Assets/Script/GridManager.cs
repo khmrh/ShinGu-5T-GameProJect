@@ -102,6 +102,8 @@ public class GridManager : MonoBehaviour
         // 계급장의 레벨 설정
         rank.SetPepperLevel(level);
 
+        rank.pepperManager = FindObjectOfType<PepperManager>();
+
         // 해당 셀에 계급장 정보 저장
         cell.SetRank(rank);
 
