@@ -74,7 +74,7 @@ public class ScoreManager : MonoBehaviour
 
     public int CalculateTargetScore(int r)
     {
-        float baseScore = 100f;
+        float baseScore = 13000f;
         float multiplier = Mathf.Pow(1.1f, r - 1);
         int target = Mathf.FloorToInt(baseScore * multiplier);
         return target;
