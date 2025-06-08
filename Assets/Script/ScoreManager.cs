@@ -3,8 +3,8 @@
 public class ScoreManager : MonoBehaviour
 {
     public int currentScore = 0;
-    public int currentCoin = 0; // 코인 변수 추가
     public int round = 1;
+    public int coin = 0;
 
     public Pepper_Game_UI gameUI;
     public GameResultUI resultUI;
@@ -22,22 +22,62 @@ public class ScoreManager : MonoBehaviour
         UpdateUI();
     }
 
+    public void StartRound(int newRound)
+    {
+        round = newRound;
+        currentScore = 0;
+        goalReached = false;
+        UpdateUI();
+    }
+
+    public void ResetForNextRound(int nextRound)
+    {
+        round = nextRound;
+        currentScore = 0;
+        goalReached = false;
+        UpdateUI();
+    }
+
     public void AddScore(int amount)
     {
         currentScore += amount;
+        CheckGoalReached();
         UpdateUI();
+    }
 
-        int targetScore = CalculateTargetScore(round);
-        if (currentScore >= targetScore)
+    public void SubtractScore(int amount)
+    {
+        currentScore = Mathf.Max(0, currentScore - amount);
+        CheckGoalReached();
+        UpdateUI();
+    }
+
+    public void AddCoin(int amount)
+    {
+        coin += amount;
+        UpdateUI();
+    }
+
+    private void CheckGoalReached()
+    {
+        int target = CalculateTargetScore(round);
+        if (currentScore >= target)
         {
             goalReached = true;
         }
     }
 
-    public void AddCoin(int amount)
+    public bool IsGoalReached()
     {
-        currentCoin += amount;
-        UpdateUI();
+        return goalReached;
+    }
+
+    public int CalculateTargetScore(int r)
+    {
+        float baseScore = 100f;
+        float multiplier = Mathf.Pow(1.1f, r - 1);
+        int target = Mathf.FloorToInt(baseScore * multiplier);
+        return target;
     }
 
     private void UpdateUI()
@@ -45,16 +85,9 @@ public class ScoreManager : MonoBehaviour
         if (gameUI != null)
         {
             gameUI.UpdateScore(currentScore);
-            gameUI.UpdateCoin(currentCoin);
+            gameUI.UpdateCoin(coin);
+            gameUI.UpdateRound(round);
             gameUI.UpdateTargetScore(CalculateTargetScore(round));
         }
-    }
-
-    public bool IsGoalReached() => goalReached;
-
-    public int CalculateTargetScore(int r)
-    {
-        int target = Mathf.FloorToInt((15000f * Mathf.Pow(1.1f, r - 1)) / 100f) * 100;
-        return target;
     }
 }

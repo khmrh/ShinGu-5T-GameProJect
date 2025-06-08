@@ -4,22 +4,17 @@ public class GameTimerManager : MonoBehaviour
 {
     public float gameDuration = 180f;
     private float remainingTime;
-
-    public Pepper_Game_UI gameUI;
     private bool isGameOver = false;
 
+    public Pepper_Game_UI gameUI;
     public GameResultUI resultUI;
-    public ScoreManager scoreManager; // ✅ 점수 확인용
+    public ScoreManager scoreManager;  // ScoreManager 직접 연결
 
     void Start()
     {
         remainingTime = gameDuration;
-
         if (gameUI == null)
             gameUI = FindObjectOfType<Pepper_Game_UI>();
-
-        if (resultUI == null)
-            resultUI = FindObjectOfType<GameResultUI>();
 
         if (scoreManager == null)
             scoreManager = FindObjectOfType<ScoreManager>();
@@ -31,8 +26,7 @@ public class GameTimerManager : MonoBehaviour
 
         remainingTime -= Time.deltaTime;
         remainingTime = Mathf.Max(0, remainingTime);
-
-        gameUI.UpdateTimer(remainingTime);
+        gameUI?.UpdateTimer(remainingTime);
 
         if (remainingTime <= 0f)
         {
@@ -45,20 +39,33 @@ public class GameTimerManager : MonoBehaviour
         isGameOver = true;
         Debug.Log("게임 종료");
 
-        if (resultUI == null)
+        if (resultUI != null && scoreManager != null)
         {
-            Debug.LogWarning("resultUI 연결 안 됨!");
-            return;
-        }
+            int goalScore = scoreManager.CalculateTargetScore(scoreManager.round);
+            int currentScore = scoreManager.currentScore;
+            int coin = scoreManager.coin;
 
-        if (scoreManager != null && scoreManager.IsGoalReached())
-        {
-            resultUI.ShowSuccess(); // ✅ 시간은 끝났고, 점수는 달성했으니 성공
+            if (scoreManager.IsGoalReached())
+            {
+                resultUI.ShowSuccess(goalScore, currentScore, coin);
+            }
+            else
+            {
+                resultUI.ShowFail(goalScore, currentScore, coin);
+            }
         }
         else
         {
-            resultUI.ShowFail();    // ✅ 점수 못 채웠으면 실패
+            Debug.LogWarning("resultUI 혹은 scoreManager가 연결되지 않음");
         }
+    }
+
+    public void ResetTimer()
+    {
+        remainingTime = gameDuration;
+        isGameOver = false;
+        gameUI?.UpdateTimer(remainingTime);
+        Debug.Log("타이머 리셋 완료");
     }
 
     public bool IsGameOver()
