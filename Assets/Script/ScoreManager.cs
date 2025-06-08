@@ -3,12 +3,13 @@
 public class ScoreManager : MonoBehaviour
 {
     public int currentScore = 0;
+    public int currentCoin = 0; // 코인 변수 추가
     public int round = 1;
 
     public Pepper_Game_UI gameUI;
     public GameResultUI resultUI;
 
-    private bool goalReached = false; // ✅ 목표 점수 달성 여부만 저장
+    private bool goalReached = false;
 
     void Start()
     {
@@ -18,15 +19,14 @@ public class ScoreManager : MonoBehaviour
         if (resultUI == null)
             resultUI = FindObjectOfType<GameResultUI>();
 
-        UpdateScoreUI();
+        UpdateUI();
     }
 
     public void AddScore(int amount)
     {
         currentScore += amount;
-        UpdateScoreUI();
+        UpdateUI();
 
-        // ✅ 목표 점수 달성했는지 저장만
         int targetScore = CalculateTargetScore(round);
         if (currentScore >= targetScore)
         {
@@ -34,23 +34,27 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    public bool IsGoalReached()
+    public void AddCoin(int amount)
     {
-        return goalReached;
+        currentCoin += amount;
+        UpdateUI();
     }
 
-    public int CalculateTargetScore(int r)
-    {
-        int target = Mathf.FloorToInt((5000f * Mathf.Pow(1.1f, r - 1)) / 100f) * 100;
-        return target;
-    }
-
-    private void UpdateScoreUI()
+    private void UpdateUI()
     {
         if (gameUI != null)
         {
             gameUI.UpdateScore(currentScore);
+            gameUI.UpdateCoin(currentCoin);
             gameUI.UpdateTargetScore(CalculateTargetScore(round));
         }
+    }
+
+    public bool IsGoalReached() => goalReached;
+
+    public int CalculateTargetScore(int r)
+    {
+        int target = Mathf.FloorToInt((15000f * Mathf.Pow(1.1f, r - 1)) / 100f) * 100;
+        return target;
     }
 }

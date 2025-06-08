@@ -188,15 +188,9 @@ public class GridManager : MonoBehaviour
 
     public void MergeRanks(DraggablePepper draggedRank, DraggablePepper targetRank)
     {
-        /* 병합 대상이 없거나 레벨이 다르면 원래 위치로 되돌리고 종료
-        if (draggedRank == null || targetRank == null || draggedRank.pepperLevel != targetRank.pepperLevel)
-        {
-            if (draggedRank != null) draggedRank.ReturnToOriginalPosition();
-            return;
-        }
-        */
         // 새로운 레벨 계산
         int newLevel = targetRank.pepperLevel + 1;
+
         // 최대 레벨 초과 시 드래그한 랭크 제거 후 종료
         if (newLevel > maxPepperLevel)
         {
@@ -204,16 +198,22 @@ public class GridManager : MonoBehaviour
             return;
         }
 
+        //  점수 추가
         if (scoreManager != null)
         {
             int points = GetScoreForLevel(newLevel);
             scoreManager.AddScore(points);
+
+            //  코인 추가 (예: 병합 레벨 * 4?)
+            int coinReward = draggedRank.pepperLevel * 1;
+            scoreManager.AddCoin(coinReward);
         }
 
-        // 타겟 랭크의 레벨을 증가시키고 드래그한 랭크 제거
+        //  타겟 랭크의 레벨을 증가시키고 드래그한 랭크 제거
         targetRank.SetPepperLevel(newLevel);
         RemoveRank(draggedRank);
     }
+
 
     public void RemoveRank(DraggablePepper rank)
     {
