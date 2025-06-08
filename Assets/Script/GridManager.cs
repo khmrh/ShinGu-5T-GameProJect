@@ -1,24 +1,24 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
-    [Header("±×¸®µå ¼öÄ¡ Á¶Á¤")]
-    public int gridWidth = 8;                                        // °¡·Î Ä­ ¼ö
-    public int gridHeight = 8;                                       // ¼¼·Î Ä­ ¼ö
-    public float cellSize = 1.05f;                                   // °¢ Ä­ÀÇ Å©±â
-    [Header("±×¸®µå ÇüÅÂ ±¸¼º")]
-    public GameObject cellPrefabs;                                   // ºóÄ­ ÇÁ¸®ÆÕ
-    public Transform gridContainer;                                  // ±×¸®µå¸¦ ´ãÀ» ºÎ¸ğ ¿ÀºêÁ§Æ®
+    [Header("ê·¸ë¦¬ë“œ ìˆ˜ì¹˜ ì¡°ì •")]
+    public int gridWidth = 8;                                        // ê°€ë¡œ ì¹¸ ìˆ˜
+    public int gridHeight = 8;                                       // ì„¸ë¡œ ì¹¸ ìˆ˜
+    public float cellSize = 1.05f;                                   // ê° ì¹¸ì˜ í¬ê¸°
+    [Header("ê·¸ë¦¬ë“œ í˜•íƒœ êµ¬ì„±")]
+    public GameObject cellPrefabs;                                   // ë¹ˆì¹¸ í”„ë¦¬íŒ¹
+    public Transform gridContainer;                                  // ê·¸ë¦¬ë“œë¥¼ ë‹´ì„ ë¶€ëª¨ ì˜¤ë¸Œì íŠ¸
 
-    [Header("Àç·á ¼öÄ¡ Á¶Á¤")]
-    public int maxPepperLevel = 8;                                   // ÃÖ´ë Pepper ·¹º§
-    [Header("Àç·á ÇüÅÂ ±¸¼º")]
-    public GameObject PepperPrefabs;                                 // Pepper ÇÁ¸®ÆÕ
-    public Sprite[] PepperSprites;                                   // °¢ ·¹º§º° Pepper ÀÌ¹ÌÁö
+    [Header("ì¬ë£Œ ìˆ˜ì¹˜ ì¡°ì •")]
+    public int maxPepperLevel = 8;                                   // ìµœëŒ€ Pepper ë ˆë²¨
+    [Header("ì¬ë£Œ í˜•íƒœ êµ¬ì„±")]
+    public GameObject PepperPrefabs;                                 // Pepper í”„ë¦¬íŒ¹
+    public Sprite[] PepperSprites;                                   // ê° ë ˆë²¨ë³„ Pepper ì´ë¯¸ì§€
 
-    [Header("Á¡¼ö ½Ã½ºÅÛ")]
-    public ScoreManager scoreManager;                                // ScoreManager ¿¬°á
+    [Header("ì ìˆ˜ ì‹œìŠ¤í…œ")]
+    public ScoreManager scoreManager;                                // ScoreManager ì—°ê²°
 
     public GridCell[,] grid;
 
@@ -29,7 +29,7 @@ public class GridManager : MonoBehaviour
 
     void Update()
     {
-        // °ÔÀÓ Å×½ºÆ®¿ë *(ÀÌÈÄ Á¦°Å)
+        // ê²Œì„ í…ŒìŠ¤íŠ¸ìš© *(ì´í›„ ì œê±°)
         if (Input.GetKeyDown(KeyCode.W))
         {
             SpawnNewRank();
@@ -48,7 +48,7 @@ public class GridManager : MonoBehaviour
 
         DraggablePepper rank = pepperObj.AddComponent<DraggablePepper>();
 
-        // DraggablePepper¿¡ ½ºÇÁ¶óÀÌÆ® ¼¼ÆÃ ÇÔ¼ö ÇÊ¿ä
+        // DraggablePepperì— ìŠ¤í”„ë¼ì´íŠ¸ ì„¸íŒ… í•¨ìˆ˜ í•„ìš”
         rank.SetSprite(sprite);
 
         emptyCell.SetRank(rank);
@@ -56,29 +56,29 @@ public class GridManager : MonoBehaviour
         return rank;
     }
 
-    void InitializeGrid()                                           // ±×¸®µå ÃÊ±âÈ­
+    void InitializeGrid()                                           // ê·¸ë¦¬ë“œ ì´ˆê¸°í™”
     {
-        grid = new GridCell[gridWidth, gridHeight];                 // ÁöÁ¤µÈ Å©±âÀÇ 2Â÷¿ø ¹è¿­ »ı¼º
+        grid = new GridCell[gridWidth, gridHeight];                 // ì§€ì •ëœ í¬ê¸°ì˜ 2ì°¨ì› ë°°ì—´ ìƒì„±
 
         for (int x = 0; x < gridWidth; x++)
         {
             for (int y = 0; y < gridHeight; y++)
             {
-                // °¢ ¼¿ÀÇ À§Ä¡ °è»ê (±×¸®µåÀÇ Áß¾ÓÀ» ±âÁØÀ¸·Î)
+                // ê° ì…€ì˜ ìœ„ì¹˜ ê³„ì‚° (ê·¸ë¦¬ë“œì˜ ì¤‘ì•™ì„ ê¸°ì¤€ìœ¼ë¡œ)
                 Vector3 position = new Vector3(
                     x * cellSize - (gridWidth * cellSize / 2) + cellSize / 2,
                     y * cellSize - (gridHeight * cellSize / 2) + cellSize / 2,
                     1f
                 );
 
-                // ¼¿ ¿ÀºêÁ§Æ® »ı¼º ¹× GridContainerÀÇ ÀÚ½ÄÀ¸·Î ¼³Á¤
+                // ì…€ ì˜¤ë¸Œì íŠ¸ ìƒì„± ë° GridContainerì˜ ìì‹ìœ¼ë¡œ ì„¤ì •
                 GameObject cellObj = Instantiate(cellPrefabs, position, Quaternion.identity, gridContainer);
-                // »ı¼ºµÈ ¿ÀºêÁ§Æ®¿¡ GridCell ÄÄÆ÷³ÍÆ® Ãß°¡
+                // ìƒì„±ëœ ì˜¤ë¸Œì íŠ¸ì— GridCell ì»´í¬ë„ŒíŠ¸ ì¶”ê°€
                 GridCell cell = cellObj.AddComponent<GridCell>();
-                // GridCell ÃÊ±âÈ­ (ÁÂÇ¥ Á¤º¸ ÀúÀå)
+                // GridCell ì´ˆê¸°í™” (ì¢Œí‘œ ì •ë³´ ì €ì¥)
                 cell.Initialize(x, y);
 
-                grid[x, y] = cell;  // ¹è¿­¿¡ ÀúÀå
+                grid[x, y] = cell;  // ë°°ì—´ì— ì €ì¥
             }
         }
     }
@@ -86,70 +86,70 @@ public class GridManager : MonoBehaviour
     public DraggablePepper CreateRankInCell(GridCell cell, int level)
     {
 
-        if (cell == null || !cell.IsEmpty()) return null;            // ºñ¾îÀÖ´Â Ä­ÀÌ ¾Æ´Ï¸é »ı¼º ½ÇÆĞ
+        if (cell == null || !cell.IsEmpty()) return null;            // ë¹„ì–´ìˆëŠ” ì¹¸ì´ ì•„ë‹ˆë©´ ìƒì„± ì‹¤íŒ¨
 
-        level = Mathf.Clamp(level, 1, maxPepperLevel);                // ·¹º§ ¹üÀ§¸¦ ÃÖ´ë ·¹º§ ³»·Î Á¦ÇÑ
+        level = Mathf.Clamp(level, 1, maxPepperLevel);                // ë ˆë²¨ ë²”ìœ„ë¥¼ ìµœëŒ€ ë ˆë²¨ ë‚´ë¡œ ì œí•œ
 
-        // ÇØ´ç ¼¿ÀÇ Áß¾Ó À§Ä¡¿¡ °è±ŞÀå À§Ä¡ ¼³Á¤
+        // í•´ë‹¹ ì…€ì˜ ì¤‘ì•™ ìœ„ì¹˜ì— ê³„ê¸‰ì¥ ìœ„ì¹˜ ì„¤ì •
         Vector3 rankPosition = new Vector3(cell.transform.position.x, cell.transform.position.y, 0f);
 
-        // Pepper ÇÁ¸®ÆÕÀ» ÀÌ¿ëÇÏ¿© °è±ŞÀå ¿ÀºêÁ§Æ® »ı¼º ¹× GridContainerÀÇ ÀÚ½ÄÀ¸·Î ¼³Á¤
+        // Pepper í”„ë¦¬íŒ¹ì„ ì´ìš©í•˜ì—¬ ê³„ê¸‰ì¥ ì˜¤ë¸Œì íŠ¸ ìƒì„± ë° GridContainerì˜ ìì‹ìœ¼ë¡œ ì„¤ì •
         GameObject pepperObj = Instantiate(PepperPrefabs, rankPosition, Quaternion.identity, gridContainer);
         pepperObj.name = "Pepper_Lvel" + level;
 
-        // »ı¼ºµÈ ¿ÀºêÁ§Æ®¿¡ DraggablePepper ÄÄÆ÷³ÍÆ® Ãß°¡
+        // ìƒì„±ëœ ì˜¤ë¸Œì íŠ¸ì— DraggablePepper ì»´í¬ë„ŒíŠ¸ ì¶”ê°€
         DraggablePepper rank = pepperObj.AddComponent<DraggablePepper>();
-        // °è±ŞÀåÀÇ ·¹º§ ¼³Á¤
+        // ê³„ê¸‰ì¥ì˜ ë ˆë²¨ ì„¤ì •
         rank.SetPepperLevel(level);
 
-        // ÇØ´ç ¼¿¿¡ °è±ŞÀå Á¤º¸ ÀúÀå
+        // í•´ë‹¹ ì…€ì— ê³„ê¸‰ì¥ ì •ë³´ ì €ì¥
         cell.SetRank(rank);
 
         return rank;
 
     }
 
-    public GridCell FindEmptyCell()                                 // ºñ¾îÀÖ´Â Ä­ Ã£±â
+    public GridCell FindEmptyCell()                                 // ë¹„ì–´ìˆëŠ” ì¹¸ ì°¾ê¸°
     {
-        List<GridCell> emptyCells = new List<GridCell>();            // ºó Ä­µéÀ» ÀúÀåÇÒ ¸®½ºÆ®
+        List<GridCell> emptyCells = new List<GridCell>();            // ë¹ˆ ì¹¸ë“¤ì„ ì €ì¥í•  ë¦¬ìŠ¤íŠ¸
 
-        for (int x = 0; x < gridWidth; x++)                        // ¸ğµç °¡·Î Ä­ ¼øÈ¸
+        for (int x = 0; x < gridWidth; x++)                        // ëª¨ë“  ê°€ë¡œ ì¹¸ ìˆœíšŒ
         {
-            for (int y = 0; y < gridHeight; y++)                   // ¸ğµç ¼¼·Î Ä­ ¼øÈ¸
+            for (int y = 0; y < gridHeight; y++)                   // ëª¨ë“  ì„¸ë¡œ ì¹¸ ìˆœíšŒ
             {
-                if (grid[x, y].IsEmpty())                           // ÇØ´ç Ä­ÀÌ ºñ¾îÀÖ´Â Ä­ÀÎÁö È®ÀÎ
+                if (grid[x, y].IsEmpty())                           // í•´ë‹¹ ì¹¸ì´ ë¹„ì–´ìˆëŠ” ì¹¸ì¸ì§€ í™•ì¸
                 {
                     emptyCells.Add(grid[x, y]);
                 }
             }
         }
 
-        if (emptyCells.Count == 0)                                  // ºóÄ­ÀÌ ¾øÀ¸¸é null °ª ¹İÈ¯
+        if (emptyCells.Count == 0)                                  // ë¹ˆì¹¸ì´ ì—†ìœ¼ë©´ null ê°’ ë°˜í™˜
         {
             return null;
         }
 
-        // ¸®½ºÆ®¿¡¼­ ·£´ıÇÏ°Ô ºó Ä­ ÇÏ³ª ¼±ÅÃÇÏ¿© ¹İÈ¯
+        // ë¦¬ìŠ¤íŠ¸ì—ì„œ ëœë¤í•˜ê²Œ ë¹ˆ ì¹¸ í•˜ë‚˜ ì„ íƒí•˜ì—¬ ë°˜í™˜
         return emptyCells[Random.Range(0, emptyCells.Count)];
 
     }
 
-    public bool SpawnNewRank()                                      // »õ °è±ŞÀå »ı¼º
+    public bool SpawnNewRank()                                      // ìƒˆ ê³„ê¸‰ì¥ ìƒì„±
     {
-        GridCell emptyCell = FindEmptyCell();                       // 1. ºñ¾îÀÖ´Â Ä­ Ã£±â
-        if (emptyCell == null) return false;                        // 2. ºñ¾îÀÖ´Â Ä­ÀÌ ¾øÀ¸¸é »ı¼º ½ÇÆĞ
+        GridCell emptyCell = FindEmptyCell();                       // 1. ë¹„ì–´ìˆëŠ” ì¹¸ ì°¾ê¸°
+        if (emptyCell == null) return false;                        // 2. ë¹„ì–´ìˆëŠ” ì¹¸ì´ ì—†ìœ¼ë©´ ìƒì„± ì‹¤íŒ¨
 
-        // 80% È®·ü·Î ·¹º§ 1, 20% È®·ü·Î ·¹º§ 2ÀÇ °è±ŞÀå ·¹º§ °áÁ¤ (¼ö¾÷¿¡ ¾´ ±×´ë·Î º£Å¸ Á¦ÀÛ, ³ªÁß¿¡ º¯°æ)
+        // 80% í™•ë¥ ë¡œ ë ˆë²¨ 1, 20% í™•ë¥ ë¡œ ë ˆë²¨ 2ì˜ ê³„ê¸‰ì¥ ë ˆë²¨ ê²°ì • (ìˆ˜ì—…ì— ì“´ ê·¸ëŒ€ë¡œ ë² íƒ€ ì œì‘, ë‚˜ì¤‘ì— ë³€ê²½)
         int rankLevel = Random.Range(0, 100) < 80 ? 1 : 2;
 
-        CreateRankInCell(emptyCell, rankLevel);                     // 3. ÇØ´ç ºó Ä­¿¡ °è±ŞÀå »ı¼º ¹× ¼³Á¤
+        CreateRankInCell(emptyCell, rankLevel);                     // 3. í•´ë‹¹ ë¹ˆ ì¹¸ì— ê³„ê¸‰ì¥ ìƒì„± ë° ì„¤ì •
 
         return true;
     }
 
     public GridCell FindClosestCell(Vector3 position)
     {
-        // ÇØ´ç positionÀ» Æ÷ÇÔÇÏ´Â ¼¿ÀÌ ÀÖ´ÂÁö È®ÀÎ
+        // í•´ë‹¹ positionì„ í¬í•¨í•˜ëŠ” ì…€ì´ ìˆëŠ”ì§€ í™•ì¸
         for (int x = 0; x < gridWidth; x++)
         {
             for (int y = 0; y < gridHeight; y++)
@@ -161,7 +161,7 @@ public class GridManager : MonoBehaviour
             }
         }
 
-        // Æ÷ÇÔÇÏ´Â ¼¿ÀÌ ¾øÀ¸¸é °¡Àå °¡±î¿î ¼¿À» Ã£À½
+        // í¬í•¨í•˜ëŠ” ì…€ì´ ì—†ìœ¼ë©´ ê°€ì¥ ê°€ê¹Œìš´ ì…€ì„ ì°¾ìŒ
         GridCell closestCell = null;
         float closestDistance = float.MaxValue;
 
@@ -169,7 +169,7 @@ public class GridManager : MonoBehaviour
         {
             for (int y = 0; y < gridHeight; y++)
             {
-                // ÇöÀç À§Ä¡¿Í °¢ ±×¸®µå ¼¿ÀÇ Áß½É »çÀÌÀÇ °Å¸® °è»ê
+                // í˜„ì¬ ìœ„ì¹˜ì™€ ê° ê·¸ë¦¬ë“œ ì…€ì˜ ì¤‘ì‹¬ ì‚¬ì´ì˜ ê±°ë¦¬ ê³„ì‚°
                 float distance = Vector3.Distance(position, grid[x, y].transform.position);
                 if (distance < closestDistance)
                 {
@@ -178,7 +178,7 @@ public class GridManager : MonoBehaviour
                 }
             }
         }
-        // ³Ê¹« ¸Ö¸® ¶³¾îÁø ¼¿Àº null ¹İÈ¯
+        // ë„ˆë¬´ ë©€ë¦¬ ë–¨ì–´ì§„ ì…€ì€ null ë°˜í™˜
         if (closestDistance > cellSize * 2)
         {
             return null;
@@ -188,38 +188,42 @@ public class GridManager : MonoBehaviour
 
     public void MergeRanks(DraggablePepper draggedRank, DraggablePepper targetRank)
     {
-        // »õ·Î¿î ·¹º§ °è»ê
         int newLevel = targetRank.pepperLevel + 1;
 
-        // ÃÖ´ë ·¹º§ ÃÊ°ú ½Ã µå·¡±×ÇÑ ·©Å© Á¦°Å ÈÄ Á¾·á
         if (newLevel > maxPepperLevel)
         {
             RemoveRank(draggedRank);
             return;
         }
 
-        //  Á¡¼ö Ãß°¡
+        // ì ìˆ˜ ë° ì½”ì¸ ì²˜ë¦¬
         if (scoreManager != null)
         {
             int points = GetScoreForLevel(newLevel);
             scoreManager.AddScore(points);
-
-            //  ÄÚÀÎ Ãß°¡ (¿¹: º´ÇÕ ·¹º§ * 4?)
-            int coinReward = draggedRank.pepperLevel * 1;
-            scoreManager.AddCoin(coinReward);
+            scoreManager.AddCoin(draggedRank.pepperLevel * 1);
         }
 
-        //  Å¸°Ù ·©Å©ÀÇ ·¹º§À» Áõ°¡½ÃÅ°°í µå·¡±×ÇÑ ·©Å© Á¦°Å
+        //  ë ˆë²¨ 8ì´ë©´ ë‘˜ ë‹¤ ì‚­ì œ
+        if (newLevel == maxPepperLevel)
+        {
+            RemoveRank(draggedRank);
+            RemoveRank(targetRank);
+            return;
+        }
+
+        // ì¼ë°˜ ë³‘í•© ì²˜ë¦¬
         targetRank.SetPepperLevel(newLevel);
         RemoveRank(draggedRank);
     }
+
 
 
     public void RemoveRank(DraggablePepper rank)
     {
         if (rank == null) return;
 
-        // ÇØ´ç ·©Å©°¡ ¼ÓÇÑ ¼¿¿¡¼­ ·©Å© Á¤º¸ Á¦°Å ¹× ·©Å© ¿ÀºêÁ§Æ® ÆÄ±«
+        // í•´ë‹¹ ë­í¬ê°€ ì†í•œ ì…€ì—ì„œ ë­í¬ ì •ë³´ ì œê±° ë° ë­í¬ ì˜¤ë¸Œì íŠ¸ íŒŒê´´
         if (rank.currentCell != null)
         {
             rank.currentCell.currentRank = null;
@@ -227,19 +231,19 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    // º´ÇÕµÈ PepperÀÇ ·¹º§¿¡ µû¶ó Á¡¼ö¸¦ ¹İÈ¯ÇÏ´Â ÇÔ¼ö(Á»¼ö´Â ÀÏµı Àû¾îµĞ °ÅÀÓ)
+    // ë³‘í•©ëœ Pepperì˜ ë ˆë²¨ì— ë”°ë¼ ì ìˆ˜ë¥¼ ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜(ì¢€ìˆ˜ëŠ” ì¼ë”´ ì ì–´ë‘” ê±°ì„)
     private int GetScoreForLevel(int level)
     {
         switch (level)
         {
-            case 2: return 50;     // ·¹º§ 2·Î º´ÇÕµÇ¸é 50Á¡
-            case 3: return 100;    // ·¹º§ 3À¸·Î º´ÇÕµÇ¸é 100Á¡
-            case 4: return 200;    // ·¹º§ 4À¸·Î º´ÇÕµÇ¸é 200Á¡
-            case 5: return 400;    // ·¹º§ 5À¸·Î º´ÇÕµÇ¸é 800Á¡
-            case 6: return 800;    // ·¹º§ 6À¸·Î º´ÇÕµÇ¸é 800Á¡
+            case 2: return 50;     // ë ˆë²¨ 2ë¡œ ë³‘í•©ë˜ë©´ 50ì 
+            case 3: return 100;    // ë ˆë²¨ 3ìœ¼ë¡œ ë³‘í•©ë˜ë©´ 100ì 
+            case 4: return 200;    // ë ˆë²¨ 4ìœ¼ë¡œ ë³‘í•©ë˜ë©´ 200ì 
+            case 5: return 400;    // ë ˆë²¨ 5ìœ¼ë¡œ ë³‘í•©ë˜ë©´ 800ì 
+            case 6: return 800;    // ë ˆë²¨ 6ìœ¼ë¡œ ë³‘í•©ë˜ë©´ 800ì 
             case 7: return 1600;
             case 8: return 3200;
-            default: return 0;     // Á¤ÀÇµÇÁö ¾ÊÀº ·¹º§Àº Á¡¼ö ¾øÀ½
+            default: return 0;     // ì •ì˜ë˜ì§€ ì•Šì€ ë ˆë²¨ì€ ì ìˆ˜ ì—†ìŒ
         }
     }
 
@@ -250,11 +254,11 @@ public class GridManager : MonoBehaviour
         DraggablePepper newRank = CreateRankInCellBySprite(sprite);
         if (newRank == null)
         {
-            Debug.Log("ºó ¼¿ÀÌ ¾ø¾î »ı¼º ½ÇÆĞ");
+            Debug.Log("ë¹ˆ ì…€ì´ ì—†ì–´ ìƒì„± ì‹¤íŒ¨");
             return false;
         }
 
-        Debug.Log("±×¸®µå¿¡ ½ºÇÁ¶óÀÌÆ® ÆäÆÛ »ı¼º ¿Ï·á");
+        Debug.Log("ê·¸ë¦¬ë“œì— ìŠ¤í”„ë¼ì´íŠ¸ í˜í¼ ìƒì„± ì™„ë£Œ");
         return true;
     }
 
