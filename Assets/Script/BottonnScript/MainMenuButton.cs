@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MainMenuButten : MonoBehaviour
+public class MainMenuButtons : MonoBehaviour
 {
-    [Header("버튼 오브젝트들")]
+    [Header("메인 버튼들")]
     public GameObject startButton;
     public GameObject exitButton;
     public GameObject recordButton;
@@ -16,22 +16,30 @@ public class MainMenuButten : MonoBehaviour
     public GameObject recordPopup;
     public GameObject settingsPopup;
 
-    [Header("팝업 닫기 버튼")]
+    [Header("닫기 버튼들")]
     public GameObject closeRecordButton;
     public GameObject closeSettingsButton;
 
     [Header("이동할 씬 이름")]
     public string gameSceneName = "PepperMergeGame";
 
+    [Header("게임 종료 확인 팝업")]
+    public GameObject exitConfirmPopup;
+    public GameObject cancelExitButton;
+    public GameObject confirmExitButton;
+
     private void Start()
     {
         startButton.GetComponent<Button>().onClick.AddListener(StartGame);
-        exitButton.GetComponent<Button>().onClick.AddListener(ExitGame);
+        exitButton.GetComponent<Button>().onClick.AddListener(OpenExitConfirmPopup);
         recordButton.GetComponent<Button>().onClick.AddListener(ToggleRecordPopup);
         settingsButton.GetComponent<Button>().onClick.AddListener(ToggleSettingsPopup);
 
         closeRecordButton.GetComponent<Button>().onClick.AddListener(CloseRecordPopup);
         closeSettingsButton.GetComponent<Button>().onClick.AddListener(CloseSettingsPopup);
+
+        cancelExitButton.GetComponent<Button>().onClick.AddListener(CloseExitConfirmPopup);
+        confirmExitButton.GetComponent<Button>().onClick.AddListener(ExitGame);
     }
 
     public void StartGame()
@@ -42,8 +50,9 @@ public class MainMenuButten : MonoBehaviour
     public void ExitGame()
     {
         Application.Quit();
+
 #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
+        UnityEditor.EditorApplication.isPlaying = false;
 #endif
     }
 
@@ -59,17 +68,27 @@ public class MainMenuButten : MonoBehaviour
             settingsPopup.SetActive(!settingsPopup.activeSelf);
     }
 
-    void CloseRecordPopup()
+    private void CloseRecordPopup()
     {
-        recordPopup.SetActive(false);
+        if (recordPopup != null)
+            recordPopup.SetActive(false);
     }
 
-    void CloseSettingsPopup()
+    private void CloseSettingsPopup()
     {
-        settingsPopup.SetActive(false);
+        if (settingsPopup != null)
+            settingsPopup.SetActive(false);
     }
 
+    private void OpenExitConfirmPopup()
+    {
+        if (exitConfirmPopup != null)
+            exitConfirmPopup.SetActive(true);
+    }
 
-
-
+    private void CloseExitConfirmPopup()
+    {
+        if (exitConfirmPopup != null)
+            exitConfirmPopup.SetActive(false);
+    }
 }
