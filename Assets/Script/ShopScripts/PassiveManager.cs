@@ -32,7 +32,8 @@ public class PassiveManager : MonoBehaviour
     /// </summary>
     private void ApplyExtraTime()
     {
-        // TODO: 제한 시간 증가 적용
+        GameTimerManager.remainingTime += 30f;
+        Debug.Log("작동");
     }
 
     /// <summary>

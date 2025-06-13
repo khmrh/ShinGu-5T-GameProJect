@@ -899,10 +899,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilities:
   - type: 0
-    name: "1\uBC88 \uD56D\uBAA9"
-    description: test1test1test1test1test1test1test1test1
+    name: "\uC694\uB9AC \uC2DC\uAC04 \uC99D\uAC00"
+    description: "\uC2DC\uAC04 \uC99D\uAC00"
     icon: {fileID: 0}
-    valuePerPurchase: 0
+    valuePerPurchase: 30
     basePrice: 0
     currentPrice: 0
     timesPurchased: 0

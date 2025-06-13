@@ -3,8 +3,10 @@
 public class GameTimerManager : MonoBehaviour
 {
     public float gameDuration = 180f;
-    private float remainingTime;
+    public static float remainingTime;
     private bool isGameOver = false;
+
+
 
     public Pepper_Game_UI gameUI;
     public GameResultUI resultUI;
@@ -13,6 +15,8 @@ public class GameTimerManager : MonoBehaviour
 
     void Start()
     {
+
+
         remainingTime = gameDuration;
         if (gameUI == null)
             gameUI = FindObjectOfType<Pepper_Game_UI>();
