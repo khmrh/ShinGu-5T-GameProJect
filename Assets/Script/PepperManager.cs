@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PepperManager : MonoBehaviour
@@ -45,29 +46,38 @@ public class PepperManager : MonoBehaviour
     }
 
     // 밖 페퍼 1개 생성
+    // 밖 페퍼 1개 생성
     private void SpawnOneOutsidePepper()
     {
+        // 재료 생성 위치 설정
         Vector3 spawnPos = GetSpawnPosition(spawnArea);
-
         GameObject pepper = Instantiate(pepperPrefab, spawnPos, Quaternion.identity);
 
+        // 이동 및 참조 연결
         PepperMovement pm = pepper.GetComponent<PepperMovement>();
         pm.SetSpawnAreaFromObject(spawnerObject);
-        pm.pepperManager = this;  // PepperMovement에 pepperManager 연결 (아래에서 추가 예정)
+        pm.pepperManager = this;
 
+        // OutsidePepper 스크립트 연결
         OutsidePepper outside = pepper.GetComponent<OutsidePepper>();
         if (outside == null)
-        {
             outside = pepper.AddComponent<OutsidePepper>();
-        }
-
         outside.pepperManager = this;
 
-        // 항상 1레벨로 고정
-        outside.SetPepper(1, gridManager.PepperSprites[0]);
+        // ✅ 등장 확률에 따라 최종 등급 결정
+        int level = PassiveManager.Instance.DetermineSpawnLevel();  // 여기에 선언!
+
+        // 등급에 맞는 스프라이트 적용
+        Sprite sprite = gridManager.PepperSprites[Mathf.Clamp(level - 1, 0, gridManager.PepperSprites.Length - 1)];
+        outside.SetPepper(level, sprite);
 
         spawnedOutsidePeppers.Add(pepper);
     }
+
+
+
+
+
 
     // 밖 페퍼가 사라질 때 호출 → 리스트에서 제거
     public void OnOutsidePepperDestroyed(GameObject outsidePepper)

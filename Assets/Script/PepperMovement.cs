@@ -1,25 +1,23 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class PepperMovement : MonoBehaviour
 {
-    public float speed = 2f;
-    private Vector2 direction;
+    private float baseSpeed = 2f;               // ê¸°ë³¸ ì´ë™ ì†ë„ (ë³€í•˜ì§€ ì•ŠìŒ)
+    public float speed = 2f;                    // ì‹¤ì œ ì ìš© ì†ë„ (íŒ¨ì‹œë¸Œ ë“±ì— ë”°ë¼ ë‹¬ë¼ì§)
+    private Vector2 direction;                  // ì´ë™ ë°©í–¥
 
-    // ½ºÆ÷³Ê ¿µ¿ª ÁÂÇ¥ Á÷Á¢ ÁöÁ¤
     public float minX = -11.5f;
     public float maxX = -6.7f;
     public float minY = -3.5f;
-    public float maxY =  3.3f;
+    public float maxY = 3.3f;
 
-    // PepperManager ÂüÁ¶
     public PepperManager pepperManager;
-
-    // ÀÌµ¿ È°¼ºÈ­ ¿©ºÎ
-    private bool isActive = true;
+    private bool isActive = true;               // ì´ë™ í™œì„±í™” ì—¬ë¶€
 
     private void Start()
     {
         direction = Random.insideUnitCircle.normalized;
+        speed = baseSpeed * 1.3f;               // ê¸°ë³¸ ì´ë™ ì†ë„ì— 1.3ë°° ë°°ìœ¨ ì ìš© (ë” ë¹ ë¥´ê²Œ ì‹œì‘)
     }
 
     private void Update()
@@ -27,13 +25,13 @@ public class PepperMovement : MonoBehaviour
         if (pepperManager != null && !pepperManager.isRoundActive)
             return;
 
-        if (!isActive) return; // »óÅÂ¿¡ µû¶ó ÀÌµ¿ Â÷´Ü
+        if (!isActive) return;
 
         Vector3 pos = transform.position;
         Vector3 move = (Vector3)(direction * speed * Time.deltaTime);
-
         Vector3 nextPos = pos + move;
 
+        // ì˜ì—­ ë°–ìœ¼ë¡œ ë‚˜ê°€ë©´ ë°˜ì‚¬
         if (nextPos.x < minX || nextPos.x > maxX)
         {
             direction.x *= -1;
@@ -65,13 +63,24 @@ public class PepperMovement : MonoBehaviour
             minX = -11.5f;
             maxX = -6.7f;
             minY = -3.5f;
-            maxY =  3.3f;
+            maxY = 3.3f;
         }
     }
 
-    // ÀÌµ¿ È°¼ºÈ­/ºñÈ°¼ºÈ­ Á¦¾î ÇÔ¼ö
     public void SetActive(bool active)
     {
         isActive = active;
+    }
+
+    // ê¸°ë³¸ ì†ë„ì— 1.3ë°°ì™€ ê°™ì€ ë°°ìœ¨ì„ ê³±í•´ ìƒˆë¡œìš´ ê¸°ì¤€ ì„¤ì •
+    public void SetBaseSpeed(float baseMultiplier)
+    {
+        speed = baseSpeed * baseMultiplier;
+    }
+
+    // íŒ¨ì‹œë¸Œì— ì˜í•´ ì†ë„ì— ë‘”í™” ë°°ìœ¨ ì ìš© (ëˆ„ì  ê°€ëŠ¥)
+    public void ApplySlowMultiplier(float slowMultiplier)
+    {
+        speed *= slowMultiplier;
     }
 }

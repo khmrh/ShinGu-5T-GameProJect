@@ -210,12 +210,17 @@ public class GridManager : MonoBehaviour
             return;
         }
 
-        // 점수 및 코인 처리
+        //  점수 계산 (패시브 보너스 포함)
         if (scoreManager != null)
         {
-            int points = GetScoreForLevel(newLevel);
-            scoreManager.AddScore(points);
-            scoreManager.AddCoin(draggedRank.pepperLevel * 1);
+            int baseScore = GetScoreForLevel(newLevel);
+            int bonusScore = PassiveManager.Instance.ApplyScoreBonus(baseScore);
+            scoreManager.AddScore(bonusScore);
+
+            //  골드 계산 (패시브 보너스 포함)
+            int baseCoin = draggedRank.pepperLevel;
+            int bonusCoin = PassiveManager.Instance.ApplyGoldBonus(baseCoin);
+            scoreManager.AddCoin(bonusCoin);
         }
 
         //  레벨 8이면 둘 다 삭제
@@ -226,10 +231,11 @@ public class GridManager : MonoBehaviour
             return;
         }
 
-        // 일반 병합 처리
+        //  일반 병합 처리
         targetRank.SetPepperLevel(newLevel);
         RemoveRank(draggedRank);
     }
+
 
 
 

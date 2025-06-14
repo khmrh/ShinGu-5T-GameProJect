@@ -1,13 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-
-public enum PassiveType
+﻿public enum PassiveType
 {
     AddTime,
-    BetterMaterial,
+    BetterMaterial,     // ⬅️ 고등급 재료 등장
     ScoreBonus,
     GoldBonus,
-    SlowIngredient
+    SlowIngredient      // ⬅️ 재료 이동 속도 둔화
 }

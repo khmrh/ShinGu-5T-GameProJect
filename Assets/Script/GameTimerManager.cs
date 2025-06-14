@@ -2,7 +2,7 @@
 
 public class GameTimerManager : MonoBehaviour
 {
-    public float gameDuration = 180f;
+    public float gameDuration = 90f;
     public static float remainingTime;
     private bool isGameOver = false;
 
