@@ -116,6 +116,9 @@ public class GridManager : MonoBehaviour
         // 해당 셀에 계급장 정보 저장
         cell.SetRank(rank);
 
+        Vector3 spawnPos = new Vector3(cell.transform.position.x, cell.transform.position.y, 0f);
+
+
         return rank;
 
     }
@@ -273,5 +276,6 @@ public class GridManager : MonoBehaviour
         return true;
     }
 
+    
 
 }
