@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using System.Linq;
 
 public class DraggablePepper : MonoBehaviour
 {
@@ -196,5 +198,21 @@ public class DraggablePepper : MonoBehaviour
         return mainCamera.ScreenToWorldPoint(mousePos);
     }
 
+
+    private int RollMaterialGradeFromPassive()
+    {
+        Dictionary<int, float> probs = PassiveManager.Instance.GetSpawnProbabilities();
+        float rand = Random.value;
+        float cumulative = 0f;
+
+        foreach (var kvp in probs.OrderBy(k => k.Key))
+        {
+            cumulative += kvp.Value;
+            if (rand <= cumulative)
+                return kvp.Key;
+        }
+
+        return 1; // 기본 등급
+    }
 
 }

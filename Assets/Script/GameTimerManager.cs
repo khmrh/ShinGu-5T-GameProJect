@@ -101,4 +101,18 @@ public class GameTimerManager : MonoBehaviour
     {
         return isGameOver;
     }
+
+
+    public static GameTimerManager Instance { get; private set; }
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
+    public void AddTime(float time)
+    {
+        remainingTime += time;
+        Debug.Log($" 시간 증가: {time}초 → 남은 시간: {remainingTime}");
+    }
 }
