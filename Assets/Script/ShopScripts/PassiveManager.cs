@@ -45,12 +45,14 @@ public class PassiveManager : MonoBehaviour
     /// <summary>
     /// 제한 시간 증가 패시브 효과 적용
     /// </summary>
-    private void ApplyExtraTime()
+    public void ApplyExtraTime()
     {
-        float extraTime = GetBonus(PassiveType.AddTime);
-        GameTimerManager.remainingTime += extraTime;
-        Debug.Log($"[패시브] 제한 시간 +{extraTime}초 적용됨");
+        if (GameTimerManager.Instance == null) return;
+
+        float extraTime = GetTotalValue(PassiveType.AddTime);
+        GameTimerManager.Instance.AddTime(extraTime); //  즉시 시간 증가
     }
+
 
     /// <summary>
     /// 재료 이동 속도 둔화 패시브 효과 적용
@@ -95,6 +97,20 @@ public class PassiveManager : MonoBehaviour
     /// 고등급 재료 등장 확률 계산
     /// 레벨에 따라 다양한 등급 등장 확률을 반환
     /// </summary>
+    public void ApplyBetterMaterial()
+    {
+        // BetterMaterial 패시브 구매 이후 즉시 확률 표를 최신화하거나 적용 대상 시스템에 전달
+        Dictionary<int, float> spawnProbs = GetSpawnProbabilities();
+
+        // 예: MaterialManager에 현재 확률 표를 전달
+        if (MaterialManager.Instance != null)
+        {
+            MaterialManager.Instance.SetSpawnProbabilities(spawnProbs);
+        }
+
+        Debug.Log("[패시브] 고급 재료 등장 확률 갱신됨");
+    }
+
     public Dictionary<int, float> GetSpawnProbabilities()
     {
         int level = GetTimesPurchased(PassiveType.BetterMaterial);
@@ -133,6 +149,23 @@ public class PassiveManager : MonoBehaviour
         return spawnChances;
     }
 
+    public int RollMaterialGrade()
+    {
+        Dictionary<int, float> probs = GetSpawnProbabilities();
+        float rand = Random.value;
+        float cumulative = 0f;
+
+        foreach (var kvp in probs.OrderBy(k => k.Key))
+        {
+            cumulative += kvp.Value;
+            if (rand <= cumulative)
+                return kvp.Key;
+        }
+
+        return 1; // 기본 등급 (등장 확률이 없는 경우)
+    }
+
+
     /// <summary>
     /// 패시브 능력 구매 처리
     /// </summary>
@@ -140,7 +173,28 @@ public class PassiveManager : MonoBehaviour
     {
         ability.Purchase();
         Debug.Log($"[상점] {ability.name} 구매 완료 → 총 {ability.timesPurchased}회");
+
+        //  즉시 적용되는 패시브 효과는 여기서 바로 반영
+        switch (ability.type)
+        {
+            case PassiveType.AddTime:
+                ApplyExtraTime();
+                break;
+
+            case PassiveType.BetterMaterial:
+                ApplyBetterMaterial();
+                break;
+
+            case PassiveType.SlowIngredient:
+                ApplyIngredientSlow();
+                break;
+
+            // 다음 라운드에 적용되는 효과는 여기선 처리하지 않음
+            default:
+                break;
+        }
     }
+
 
     /// <summary>
     /// BetterMaterial 패시브에 따라 재료의 등장 레벨을 결정하는 함수
