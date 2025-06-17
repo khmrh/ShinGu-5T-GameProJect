@@ -115,4 +115,9 @@ public class GameTimerManager : MonoBehaviour
         remainingTime += time;
         Debug.Log($" 시간 증가: {time}초 → 남은 시간: {remainingTime}");
     }
+
+    public void SetTime(float newTime)
+    {
+        remainingTime = Mathf.Max(0f, newTime);
+    }
 }
