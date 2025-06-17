@@ -3925,7 +3925,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timerManager: {fileID: 337099519}
   scoreManager: {fileID: 1553023621}
-  resultUI: {fileID: 0}
+  resultUI: {fileID: 464998245}
 --- !u!4 &1080071574
 Transform:
   m_ObjectHideFlags: 0
