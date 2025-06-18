@@ -48,13 +48,13 @@ public class GridManager : MonoBehaviour
 
         DraggablePepper rank = pepperObj.AddComponent<DraggablePepper>();
 
-        // ✅ 스프라이트 설정
+        //  스프라이트 설정
         rank.SetSprite(sprite);
 
-        // ✅ pepperManager 연결
+        //  pepperManager 연결
         rank.pepperManager = FindObjectOfType<PepperManager>();
 
-        // ✅ 선택 사항: gridManager, currentCell, originalPosition도 같이 넣어주면 좋아요
+        //  선택 사항: gridManager, currentCell, originalPosition도 같이 넣어주면 좋아요
         rank.gridManager = this;
         rank.currentCell = emptyCell;
         rank.originalPosition = rankPosition;
