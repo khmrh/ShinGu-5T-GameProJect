@@ -28,6 +28,12 @@ public class CheatManager : MonoBehaviour
             timerManager.SetTime(3f);  // 타이머 스크립트에 SetTime 함수가 필요
             Debug.Log("치트 사용: 남은 시간 3초");
         }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            scoreManager.AddScore(10000);
+            Debug.Log("치트 사용: 점수 +10000");
+        }
     }
 
     void SpawnHighLevelPepper()

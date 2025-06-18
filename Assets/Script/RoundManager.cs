@@ -3,15 +3,14 @@
 public class RoundManager : MonoBehaviour
 {
     public int currentRound = 1;
+
     public ScoreManager scoreManager;
     public GameTimerManager gameTimerManager;
     public GameResultUI resultUI;
-
-
+    public CameraRotationController cameraController;  // ✅ 교체
 
     private void Start()
     {
-        // 필요한 컴포넌트 자동 할당
         if (scoreManager == null)
             scoreManager = FindObjectOfType<ScoreManager>();
 
@@ -21,32 +20,34 @@ public class RoundManager : MonoBehaviour
         if (resultUI == null)
             resultUI = FindObjectOfType<GameResultUI>();
 
+        if (cameraController == null)
+            cameraController = FindObjectOfType<CameraRotationController>();
+
         StartRound(currentRound);
 
         resultUI.HideAll();
     }
 
-
-    // 새로운 라운드 시작
     public void StartRound(int round)
     {
         currentRound = round;
 
-        if (scoreManager != null)
-            scoreManager.ResetForNextRound(currentRound);
+        scoreManager?.ResetForNextRound(currentRound);
+        gameTimerManager?.ResetTimer();
+        resultUI?.HideAll();
 
-        if (gameTimerManager != null)
-            gameTimerManager.ResetTimer();
-
-        if (resultUI != null)
-            resultUI.HideAll();
-     
+        cameraController?.LookDown();  // ✅ 아래로
     }
 
-    // 다음 라운드로 진행 (버튼 클릭 시 호출)
     public void ProceedToNextRound()
     {
         currentRound++;
         StartRound(currentRound);
+    }
+
+    public void OnResultClose()
+    {
+        resultUI?.HideAll();
+        cameraController?.LookUp();    // ✅ 위로
     }
 }
