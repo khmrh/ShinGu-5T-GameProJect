@@ -138,7 +138,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &22514540
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,7 +153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 1454563009}
   blenderCamera: {fileID: 168237598483082388}
-  animator: {fileID: 0}
+  animator: {fileID: 6650404047327494818}
 --- !u!4 &22514541
 Transform:
   m_ObjectHideFlags: 0
@@ -1244,7 +1244,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &288731522
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1453,7 +1453,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1967949027108f546aab288408d76c99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameDuration: 180
+  gameDuration: 90
   gameUI: {fileID: 495929035}
   resultUI: {fileID: 464998245}
   scoreManager: {fileID: 1553023621}
@@ -2188,9 +2188,9 @@ MonoBehaviour:
   successCurrentScoreText: {fileID: 935648963}
   successCoinText: {fileID: 508796111}
   successRoundText: {fileID: 152413579}
-  failTargetScoreText: {fileID: 935648963}
+  failTargetScoreText: {fileID: 200540693}
   failCurrentScoreText: {fileID: 1937785039}
-  failCoinText: {fileID: 508796111}
+  failCoinText: {fileID: 1533752890}
   failRoundText: {fileID: 312364000}
   nextRoundButton: {fileID: 155016578}
 --- !u!4 &464998246
@@ -4620,7 +4620,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &1454563008
 AudioListener:
   m_ObjectHideFlags: 0
@@ -4876,8 +4876,8 @@ MonoBehaviour:
   currentScore: 0
   round: 1
   coin: 0
-  gameUI: {fileID: 0}
-  resultUI: {fileID: 0}
+  gameUI: {fileID: 495929035}
+  resultUI: {fileID: 464998245}
 --- !u!1 &1556864938
 GameObject:
   m_ObjectHideFlags: 0
@@ -4895,7 +4895,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1556864939
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7593,7 +7593,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!95 &6650404047327494818
 Animator:
   serializedVersion: 5
