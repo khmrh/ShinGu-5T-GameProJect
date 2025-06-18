@@ -7,6 +7,11 @@ public class ShopUIManager : MonoBehaviour
     public GameObject slotPrefab;      // 슬롯 프리팹
     public Transform slotParent;       // 슬롯들이 들어갈 부모 오브젝트 (ex: SlotGrid)
 
+    [Header("새로고침 비용 설정")]
+    public int refreshBaseCost = 200;
+    private int refreshCount = 0;
+    private float refreshCostMultiplier = 1.4f;
+
     void Start()
     {
         GenerateShop();
@@ -33,9 +38,19 @@ public class ShopUIManager : MonoBehaviour
         }
     }
 
-    //  새로고침 버튼이 호출할 함수
+    // 새로고침 버튼 클릭 시 호출되는 함수
     public void RefreshShop()
     {
+        int cost = Mathf.RoundToInt(refreshBaseCost * Mathf.Pow(refreshCostMultiplier, refreshCount));
+
+        if (!PlayerData.Instance.SpendGold(cost))
+        {
+            Debug.LogWarning($"[상점] 골드 부족! 새로고침 비용: {cost}, 보유: {PlayerData.Instance.currentGold}");
+            return;
+        }
+
+        refreshCount++;
         GenerateShop();
+        Debug.Log($"[상점] 새로고침 성공! {cost} 골드 차감됨 (총 {refreshCount}회)");
     }
 }

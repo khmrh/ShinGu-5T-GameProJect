@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
@@ -10,15 +8,30 @@ public class PassiveAbility
     public string description;
     public Sprite icon;
 
-    public float valuePerPurchase;
-    public int basePrice;
-    public int currentPrice;
-    public int timesPurchased;
+    public float valuePerPurchase = 1f;
+
+    public int basePrice = 100;
+    public float priceMultiplier = 1.5f;
+
+    public int timesPurchased = 0;
+    public int maxPurchaseCount = 5;
+
+    public int GetCurrentPrice()
+    {
+        return Mathf.RoundToInt(basePrice * Mathf.Pow(priceMultiplier, timesPurchased));
+    }
 
     public void Purchase()
     {
-        timesPurchased++;
-        currentPrice = Mathf.RoundToInt(basePrice * Mathf.Pow(1.5f, timesPurchased));
+        if (!IsMaxed())
+        {
+            timesPurchased++;
+        }
+    }
+
+    public bool IsMaxed()
+    {
+        return timesPurchased >= maxPurchaseCount;
     }
 
     public float GetTotalValue()
@@ -26,4 +39,3 @@ public class PassiveAbility
         return valuePerPurchase * timesPurchased;
     }
 }
-

@@ -175,27 +175,30 @@ public class PassiveManager : MonoBehaviour
     /// </summary>
     public void Purchase(PassiveAbility ability)
     {
+        if (ability.IsMaxed())
+        {
+            Debug.LogWarning($"[상점] {ability.name}은 최대 구매 횟수 도달.");
+            return;
+        }
+
+        int cost = ability.GetCurrentPrice();
+        if (!PlayerData.Instance.SpendGold(cost))
+        {
+            Debug.LogWarning($"[상점] 골드 부족. 필요: {cost}, 보유: {PlayerData.Instance.currentGold}");
+            return;
+        }
+
         ability.Purchase();
-        Debug.Log($"[상점] {ability.name} 구매 완료 → 총 {ability.timesPurchased}회");
+        Debug.Log($"[상점] {ability.name} 구매 완료! 골드 {cost} 사용");
 
         switch (ability.type)
         {
-            case PassiveType.AddTime:
-                ApplyExtraTime(); //  즉시 시간 증가
-                break;
-
-            case PassiveType.BetterMaterial:
-                Debug.Log("고급 재료 확률 즉시 반영됨"); //  단순 메시지 or UI 갱신 호출
-                break;
-
-            case PassiveType.SlowIngredient:
-                ApplyIngredientSlow();
-                break;
-
-            default:
-                break;
+            case PassiveType.AddTime: ApplyExtraTime(); break;
+            case PassiveType.BetterMaterial: ApplyBetterMaterial(); break;
+            case PassiveType.SlowIngredient: ApplyIngredientSlow(); break;
         }
     }
+
 
 
 

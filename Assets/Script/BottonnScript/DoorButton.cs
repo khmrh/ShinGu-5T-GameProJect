@@ -6,6 +6,8 @@ public class DoorButton : MonoBehaviour
     public AudioSource clickSound;        // 클릭 사운드 (선택)
     private bool isDoorOpen = false;      // 현재 문이 열린 상태
 
+    public GameObject targetPanel;
+
     private void OnMouseDown()
     {
         // 🔊 클릭 사운드 재생
@@ -20,5 +22,9 @@ public class DoorButton : MonoBehaviour
             isDoorOpen = !isDoorOpen;
             doorAnimator.SetBool("IsDoorOpen", isDoorOpen);
         }
+
+        //판넬 띄우기
+        if (targetPanel != null)
+            targetPanel.SetActive(true);
     }
 }

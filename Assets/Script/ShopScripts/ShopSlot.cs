@@ -18,20 +18,27 @@ public class ShopSlot : MonoBehaviour
 
         nameText.text = ability.name;
         descriptionText.text = $"{ability.description}\n▶ 누적 효과: {ability.GetTotalValue()}";
-        priceText.text = "가격: 0";
 
-        // 슬롯 전체에 붙은 Button 컴포넌트에 클릭 이벤트 연결
-        var btn = GetComponent<Button>();
+        int price = ability.GetCurrentPrice();
+        priceText.text = ability.IsMaxed() ? "최대치" : $"가격: {price}";
+
+        Button btn = GetComponent<Button>();
         if (btn != null)
         {
             btn.onClick.RemoveAllListeners();
-            btn.onClick.AddListener(OnClickPurchase);
-        }
-        else
-        {
-            Debug.LogWarning("ShopSlot에 Button 컴포넌트가 없습니다!");
+
+            if (ability.IsMaxed() || price > PlayerData.Instance.currentGold)
+            {
+                btn.interactable = false;
+            }
+            else
+            {
+                btn.interactable = true;
+                btn.onClick.AddListener(OnClickPurchase);
+            }
         }
     }
+
 
     public void OnClickPurchase()
     {
