@@ -30,10 +30,9 @@ public class DraggablePepper : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         gridManager = FindObjectOfType<GridManager>();
         pepperCollider = GetComponent<Collider2D>();
+
         if (pepperCollider == null)
-        {
             Debug.LogWarning("이 오브젝트에 Collider2D 없음.");
-        }
 
         if (spriteRenderer == null)
             spriteRenderer = GetComponent<SpriteRenderer>();
@@ -64,7 +63,9 @@ public class DraggablePepper : MonoBehaviour
 
     void Start()
     {
-        originalPosition = transform.position;
+        // 최초 생성 위치 저장 (Z 고정)
+        originalPosition = new Vector3(transform.position.x, transform.position.y, 0.9f);
+        transform.position = originalPosition; // Z값 고정
     }
 
     void Update()
@@ -77,25 +78,27 @@ public class DraggablePepper : MonoBehaviour
         {
             pepperCollider.enabled = false; // 이동 중 클릭 방지
             transform.position = Vector3.Lerp(transform.position, originalPosition, dragSpeed * Time.deltaTime);
-            if (Vector3.Distance(transform.position, originalPosition) < 0.05f) // 충분히 가까워지면 멈춤
+
+            if (Vector3.Distance(transform.position, originalPosition) < 0.05f)
             {
-                transform.position = originalPosition; // 최종 위치 정확히 설정
+                // 💡 정확한 위치로 스냅, Z값 포함
+                transform.position = new Vector3(originalPosition.x, originalPosition.y, 0.9f);
                 isReturning = false;
-                pepperCollider.enabled = true; // 돌아오면 클릭 활성화
+                pepperCollider.enabled = true;
             }
         }
         else if (isMovingToCell && targetMoveCell != null)
         {
-            pepperCollider.enabled = false; // 이동 중 클릭 방지
+            pepperCollider.enabled = false;
             transform.position = Vector3.Lerp(transform.position, targetMoveCell.transform.position, Time.deltaTime * dragSpeed);
 
-            if (Vector3.Distance(transform.position, targetMoveCell.transform.position) < 0.1f) // 충분히 가까워지면 멈춤
+            if (Vector3.Distance(transform.position, targetMoveCell.transform.position) < 0.1f)
             {
-                transform.position = targetMoveCell.transform.position; // 최종 위치 정확히 설정
-                transform.position = new Vector3(transform.position.x, transform.position.y, 0f); // Z좌표 변경
+                // 💡 최종 위치 고정 시에도 Z = 0.9f 적용
+                transform.position = new Vector3(targetMoveCell.transform.position.x, targetMoveCell.transform.position.y, 0.9f);
                 isMovingToCell = false;
                 targetMoveCell = null;
-                pepperCollider.enabled = true; // 돌아오면 클릭 활성화
+                pepperCollider.enabled = true;
             }
         }
     }
@@ -125,6 +128,7 @@ public class DraggablePepper : MonoBehaviour
 
         StopDragging();
     }
+
     void StartDragging()
     {
         isDragging = true;
@@ -140,6 +144,7 @@ public class DraggablePepper : MonoBehaviour
         isDragging = false;
         spriteRenderer.sortingOrder = 5;
         GridCell targetCell = gridManager.FindClosestCell(transform.position);
+
         if (targetCell != null)
         {
             if (targetCell.currentRank == null)
@@ -170,7 +175,9 @@ public class DraggablePepper : MonoBehaviour
         targetMoveCell = targetCell;
         targetCell.currentRank = this;
         currentCell = targetCell;
-        originalPosition = targetCell.transform.position;
+
+        // 💡 복귀 위치에도 Z 고정
+        originalPosition = new Vector3(targetCell.transform.position.x, targetCell.transform.position.y, 0.9f);
     }
 
     public void ReturnToOriginalPosition()
@@ -184,9 +191,7 @@ public class DraggablePepper : MonoBehaviour
             return;
 
         if (currentCell != null)
-        {
             currentCell.currentRank = null;
-        }
 
         gridManager.MergeRanks(this, targetCell.currentRank);
     }
@@ -197,7 +202,6 @@ public class DraggablePepper : MonoBehaviour
         mousePos.z = -mainCamera.transform.position.z;
         return mainCamera.ScreenToWorldPoint(mousePos);
     }
-
 
     private int RollMaterialGradeFromPassive()
     {
@@ -214,5 +218,4 @@ public class DraggablePepper : MonoBehaviour
 
         return 1; // 기본 등급
     }
-
 }

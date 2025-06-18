@@ -133,7 +133,8 @@ public class PepperManager : MonoBehaviour
         if (newPepper != null)
         {
             newPepper.transform.SetParent(emptyCell.transform);
-            newPepper.transform.localPosition = Vector3.zero;
+            newPepper.transform.localPosition = new Vector3(0f, 0f, 0.9f);
+
 
             newPepper.pepperManager = this; // 🔥 여기 반드시 추가!
         }

@@ -94,34 +94,32 @@ public class GridManager : MonoBehaviour
 
     public DraggablePepper CreateRankInCell(GridCell cell, int level)
     {
+        if (cell == null || !cell.IsEmpty()) return null; // 비어있지 않으면 실패
 
-        if (cell == null || !cell.IsEmpty()) return null;            // 비어있는 칸이 아니면 생성 실패
+        level = Mathf.Clamp(level, 1, maxPepperLevel);
 
-        level = Mathf.Clamp(level, 1, maxPepperLevel);                // 레벨 범위를 최대 레벨 내로 제한
+        // Z = 0.9f 위치로 설정
+        Vector3 rankPosition = new Vector3(cell.transform.position.x, cell.transform.position.y, 0.9f);
 
-        // 해당 셀의 중앙 위치에 계급장 위치 설정
-        Vector3 rankPosition = new Vector3(cell.transform.position.x, cell.transform.position.y, 0f);
-
-        // Pepper 프리팹을 이용하여 계급장 오브젝트 생성 및 GridContainer의 자식으로 설정
+        // 생성
         GameObject pepperObj = Instantiate(PepperPrefabs, rankPosition, Quaternion.identity, gridContainer);
-        pepperObj.name = "Pepper_Lvel" + level;
+        pepperObj.name = "Pepper_Level" + level;
 
-        // 생성된 오브젝트에 DraggablePepper 컴포넌트 추가
+        // 컴포넌트 추가
         DraggablePepper rank = pepperObj.AddComponent<DraggablePepper>();
-        // 계급장의 레벨 설정
         rank.SetPepperLevel(level);
-
         rank.pepperManager = FindObjectOfType<PepperManager>();
 
-        // 해당 셀에 계급장 정보 저장
+        // 📌 명확히 position과 originalPosition 고정
+        rank.transform.position = rankPosition;
+        rank.originalPosition = rankPosition;
+
+        // 셀에 설정
         cell.SetRank(rank);
 
-        Vector3 spawnPos = new Vector3(cell.transform.position.x, cell.transform.position.y, 0f);
-
-
         return rank;
-
     }
+
 
     public GridCell FindEmptyCell()                                 // 비어있는 칸 찾기
     {
