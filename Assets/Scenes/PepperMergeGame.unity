@@ -6962,7 +6962,7 @@ GameObject:
   - component: {fileID: 2647898422356264030}
   - component: {fileID: 5361293284253491809}
   - component: {fileID: 9077926073312450360}
-  - component: {fileID: 9077926073312450366}
+  - component: {fileID: 9077926073312450365}
   - component: {fileID: 9077926073312450361}
   - component: {fileID: 9077926073312450362}
   - component: {fileID: 9077926073312450364}
@@ -7835,7 +7835,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &9077926073312450366
+--- !u!114 &9077926073312450365
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7844,14 +7844,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4423045620642150705}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82d9e7a5f6e227f4a8f88905ebbc7032, type: 3}
+  m_Script: {fileID: 11500000, guid: eaa73c9f28f063448a3d99a8e41ee179, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hingeTransform: {fileID: 1816850022}
+  doorAnimator: {fileID: 9077926073312450361}
   clickSound: {fileID: 9077926073312450364}
-  closedRotation: {x: -90, y: 0, z: 0}
-  openRotation: {x: -90, y: -95, z: 0}
-  rotateSpeed: 2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
