@@ -208,6 +208,8 @@ public class GridManager : MonoBehaviour
             return;
         }
 
+        FindObjectOfType<SoundManager>().PlayMergeSound();
+
         //  점수 계산 (패시브 보너스 포함)
         if (scoreManager != null)
         {
