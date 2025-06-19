@@ -1,27 +1,30 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ShopUIManager : MonoBehaviour
 {
-    public GameObject slotPrefab;      // ½½·Ô ÇÁ¸®ÆÕ
-    public Transform slotParent;       // ½½·ÔµéÀÌ µé¾î°¥ ºÎ¸ğ ¿ÀºêÁ§Æ® (ex: SlotGrid)
+    public GameObject slotPrefab;      // ìŠ¬ë¡¯ í”„ë¦¬íŒ¹
+    public Transform slotParent;       // ìŠ¬ë¡¯ë“¤ì´ ë“¤ì–´ê°ˆ ë¶€ëª¨ ì˜¤ë¸Œì íŠ¸ (ex: SlotGrid)
 
-    [Header("»õ·Î°íÄ§ ºñ¿ë ¼³Á¤")]
+    [Header("ìƒˆë¡œê³ ì¹¨ ë¹„ìš© ì„¤ì •")]
     public int refreshBaseCost = 200;
     private int refreshCount = 0;
     private float refreshCostMultiplier = 1.4f;
 
+    private ScoreManager scoreManager;
+
     void Start()
     {
+        scoreManager = FindObjectOfType<ScoreManager>(); // âœ… ScoreManager ì°¸ì¡°
         GenerateShop();
     }
 
-    // ½½·Ô »ı¼º (ÃÊ±â 4°³ ·£´ı)
+    // ìŠ¬ë¡¯ ìƒì„± (ì´ˆê¸° 4ê°œ ëœë¤)
     void GenerateShop()
     {
         foreach (Transform child in slotParent)
-            Destroy(child.gameObject); // ±âÁ¸ ½½·Ô Á¦°Å
+            Destroy(child.gameObject); // ê¸°ì¡´ ìŠ¬ë¡¯ ì œê±°
 
         List<PassiveAbility> all = PassiveManager.Instance.abilities;
         List<PassiveAbility> random = new List<PassiveAbility>(all);
@@ -38,19 +41,24 @@ public class ShopUIManager : MonoBehaviour
         }
     }
 
-    // »õ·Î°íÄ§ ¹öÆ° Å¬¸¯ ½Ã È£ÃâµÇ´Â ÇÔ¼ö
+    // ìƒˆë¡œê³ ì¹¨ ë²„íŠ¼ í´ë¦­ ì‹œ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜
     public void RefreshShop()
     {
         int cost = Mathf.RoundToInt(refreshBaseCost * Mathf.Pow(refreshCostMultiplier, refreshCount));
 
         if (!PlayerData.Instance.SpendGold(cost))
         {
-            Debug.LogWarning($"[»óÁ¡] °ñµå ºÎÁ·! »õ·Î°íÄ§ ºñ¿ë: {cost}, º¸À¯: {PlayerData.Instance.currentGold}");
+            Debug.LogWarning($"[ìƒì ] ê³¨ë“œ ë¶€ì¡±! ìƒˆë¡œê³ ì¹¨ ë¹„ìš©: {cost}, ë³´ìœ : {PlayerData.Instance.currentGold}");
             return;
         }
 
         refreshCount++;
         GenerateShop();
-        Debug.Log($"[»óÁ¡] »õ·Î°íÄ§ ¼º°ø! {cost} °ñµå Â÷°¨µÊ (ÃÑ {refreshCount}È¸)");
+
+        // âœ… ê³¨ë“œ ì°¨ê° í›„ UI ê°±ì‹ 
+        if (scoreManager != null)
+            scoreManager.RefreshUIOnly(); // ë˜ëŠ” scoreManager.UpdateUI();
+
+        Debug.Log($"[ìƒì ] ìƒˆë¡œê³ ì¹¨ ì„±ê³µ! {cost} ê³¨ë“œ ì°¨ê°ë¨ (ì´ {refreshCount}íšŒ)");
     }
 }

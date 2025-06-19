@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerData : MonoBehaviour
 {
@@ -16,10 +16,17 @@ public class PlayerData : MonoBehaviour
         if (currentGold >= amount)
         {
             currentGold -= amount;
+
+            //  UI 갱신
+            ScoreManager scoreManager = FindObjectOfType<ScoreManager>();
+            if (scoreManager != null)
+                scoreManager.UpdateUI();
+
             return true;
         }
         return false;
     }
+
 
     public void AddGold(int amount)
     {
