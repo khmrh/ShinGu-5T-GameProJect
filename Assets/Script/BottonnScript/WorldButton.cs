@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class WorldButton : MonoBehaviour
+public class DoorCloseButton : MonoBehaviour
 {
     public Transform hingeTransform;                // 회전할 경첩 (문 pivot)
     public AudioSource clickSound;

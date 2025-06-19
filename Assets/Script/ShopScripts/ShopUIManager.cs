@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class ShopUIManager : MonoBehaviour
 {
-    public GameObject slotPrefab;      // 슬롯 프리팹
-    public Transform slotParent;       // 슬롯들이 들어갈 부모 오브젝트 (ex: SlotGrid)
+    public GameObject slotPrefab;       // 슬롯 프리팹
+    public Transform slotParent;        // 슬롯들이 들어갈 부모 오브젝트
+    public Animator shopAnimator;       // 🔹 상점 열기 애니메이터
 
     [Header("새로고침 비용 설정")]
     public int refreshBaseCost = 200;
@@ -16,8 +17,21 @@ public class ShopUIManager : MonoBehaviour
 
     void Start()
     {
-        scoreManager = FindObjectOfType<ScoreManager>(); // ✅ ScoreManager 참조
-        GenerateShop();
+        scoreManager = FindObjectOfType<ScoreManager>();
+        StartCoroutine(WaitForShopAnimation());  // 🔹 코루틴 시작
+    }
+
+    // 🔸 애니메이션 종료 대기 후 슬롯 생성
+    IEnumerator WaitForShopAnimation()
+    {
+        // "ShopOpen" 상태가 끝날 때까지 대기
+        while (shopAnimator.GetCurrentAnimatorStateInfo(0).IsName("ShopOpen") &&
+               shopAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
+        {
+            yield return null; // 다음 프레임까지 대기
+        }
+
+        GenerateShop(); // 애니메이션 종료 후 실행
     }
 
     // 슬롯 생성 (초기 4개 랜덤)
@@ -55,9 +69,8 @@ public class ShopUIManager : MonoBehaviour
         refreshCount++;
         GenerateShop();
 
-        // ✅ 골드 차감 후 UI 갱신
         if (scoreManager != null)
-            scoreManager.RefreshUIOnly(); // 또는 scoreManager.UpdateUI();
+            scoreManager.RefreshUIOnly();
 
         Debug.Log($"[상점] 새로고침 성공! {cost} 골드 차감됨 (총 {refreshCount}회)");
     }
