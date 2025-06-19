@@ -2,8 +2,12 @@
 
 public class PepperMovement : MonoBehaviour
 {
-    private float baseSpeed = 2f;               // 기본 이동 속도 (변하지 않음)
-    public float speed = 2f;                    // 실제 적용 속도 (패시브 등에 따라 달라짐)
+    private float baseSpeed = 2f;               // 변하지 않는 기본 속도
+    private float baseSpeedMultiplier = 1f;     // 기본 속도 배율 (ex: 1.3f)
+    private float slowMultiplier = 1f;          // 둔화 배율
+
+    public float speed => baseSpeed * baseSpeedMultiplier * slowMultiplier; // 최종 속도
+
     private Vector2 direction;                  // 이동 방향
 
     public float minX = -11.5f;
@@ -17,7 +21,8 @@ public class PepperMovement : MonoBehaviour
     private void Start()
     {
         direction = Random.insideUnitCircle.normalized;
-        speed = baseSpeed * 1.3f;               // 기본 이동 속도에 1.3배 배율 적용 (더 빠르게 시작)
+        baseSpeedMultiplier = 1.3f;             // 기본 이동 속도 배율 설정
+        slowMultiplier = 1f;                    // 둔화 배율 초기화
     }
 
     private void Update()
@@ -72,15 +77,17 @@ public class PepperMovement : MonoBehaviour
         isActive = active;
     }
 
-    // 기본 속도에 1.3배와 같은 배율을 곱해 새로운 기준 설정
+    // 기본 속도 배율 설정
     public void SetBaseSpeed(float baseMultiplier)
     {
-        speed = baseSpeed * baseMultiplier;
+        baseSpeedMultiplier = baseMultiplier;
+        Debug.Log($"SetBaseSpeed 호출: baseSpeedMultiplier = {baseSpeedMultiplier}, 최종 speed = {speed}");
     }
 
-    // 패시브에 의해 속도에 둔화 배율 적용 (누적 가능)
-    public void ApplySlowMultiplier(float slowMultiplier)
+    // 둔화 배율 설정 (누적이 아닌 직접 설정)
+    public void ApplySlowMultiplier(float newSlowMultiplier)
     {
-        speed *= slowMultiplier;
+        slowMultiplier = newSlowMultiplier;
+        Debug.Log($"ApplySlowMultiplier 호출: slowMultiplier = {slowMultiplier}, 최종 speed = {speed}");
     }
 }
