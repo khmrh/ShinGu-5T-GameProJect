@@ -782,8 +782,8 @@ Transform:
   m_GameObject: {fileID: 184114336}
   serializedVersion: 2
   m_LocalRotation: {x: -0.000000029802326, y: -0.0000000028521756, z: 0.053028762, w: 0.99859303}
-  m_LocalPosition: {x: -0.0251, y: 0.0006, z: -0.0034}
-  m_LocalScale: {x: 0.0011811873, y: 0.0011811875, z: 0.0011811875}
+  m_LocalPosition: {x: -0.02363, y: 0.00079, z: -0.0034}
+  m_LocalScale: {x: 0.0015444332, y: 0.0015444333, z: 0.0015444333}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2647898422356264030}
@@ -5076,7 +5076,6 @@ MonoBehaviour:
   cameraAnimator: {fileID: 6650404047327494819}
   pauseButton: {fileID: 1846821525}
   objectsToDisable:
-  - {fileID: 184114336}
   - {fileID: 1611283103}
   - {fileID: 198458353}
   - {fileID: 0}
@@ -6397,8 +6396,8 @@ Transform:
   m_GameObject: {fileID: 1611283103}
   serializedVersion: 2
   m_LocalRotation: {x: -0.00000008940697, y: 0.0000000052386895, z: -0.042133804, w: 0.99911207}
-  m_LocalPosition: {x: -0.025709994, y: -0.0056400015, z: -0.0033500008}
-  m_LocalScale: {x: 0.0014614252, y: 0.0014614258, z: 0.0014614253}
+  m_LocalPosition: {x: -0.022669, y: -0.005473, z: -0.00335}
+  m_LocalScale: {x: 0.001839401, y: 0.0018394017, z: 0.0018394011}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2647898422356264030}
