@@ -18,7 +18,6 @@ public class MainMenuButtons : MonoBehaviour
 
     [Header("닫기 버튼들")]
     public GameObject closeRecordButton;
-    public GameObject closeSettingsButton;
 
     [Header("이동할 씬 이름")]
     public string gameSceneName = "PepperMergeGame";
@@ -36,7 +35,6 @@ public class MainMenuButtons : MonoBehaviour
         settingsButton.GetComponent<Button>().onClick.AddListener(ToggleSettingsPopup);
 
         closeRecordButton.GetComponent<Button>().onClick.AddListener(CloseRecordPopup);
-        closeSettingsButton.GetComponent<Button>().onClick.AddListener(CloseSettingsPopup);
 
         cancelExitButton.GetComponent<Button>().onClick.AddListener(CloseExitConfirmPopup);
         confirmExitButton.GetComponent<Button>().onClick.AddListener(ExitGame);
