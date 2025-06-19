@@ -9,6 +9,9 @@ public class NextRoundTrigger : MonoBehaviour
     public TMP_Text countdownText;
     public float countdownInterval = 1f;
 
+    [Header("카운트다운 종료 후 활성화할 오브젝트들")]
+    public GameObject[] objectsToActivate;
+
     private bool isActivated = false;
 
     private void OnMouseDown()
@@ -46,8 +49,17 @@ public class NextRoundTrigger : MonoBehaviour
         if (roundManager != null)
             roundManager.GoToNextRound();
 
-        // 애니메이션, 카운트다운 끝난 후 다시 클릭 가능하도록
+        // 카운트다운 및 라운드 시작 후 오브젝트 활성화
+        if (objectsToActivate != null)
+        {
+            foreach (var obj in objectsToActivate)
+            {
+                if (obj != null)
+                    obj.SetActive(true);
+            }
+        }
+
+        // 다시 클릭 가능하도록
         isActivated = false;
     }
-
 }
