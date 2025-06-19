@@ -52,6 +52,7 @@ public class roundmanager : MonoBehaviour
     {
         currentRound++;
         StartRound(currentRound);
+        Debug.Log($"라운드 {currentRound} 시작");
     }
 
     // 결과창 닫기 버튼이 이걸 호출
