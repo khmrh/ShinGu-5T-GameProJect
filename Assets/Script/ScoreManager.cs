@@ -61,10 +61,15 @@ public class ScoreManager : MonoBehaviour
     // 코인(골드) 추가 함수
     public void AddCoin(int amount)
     {
-        coin += amount; // 내부 추적용(선택사항)
-        PlayerData.Instance.AddGold(amount);  // 실제 플레이어 골드에 반영
+        // 패시브 보너스로 최종 골드 계산
+        int finalAmount = PassiveManager.Instance.ApplyGoldBonus(amount);
+
+        coin += finalAmount;                     // 내부 추적용
+        PlayerData.Instance.AddGold(finalAmount);  // 실제 골드에 반영
+
         UpdateUI();  // UI 갱신
     }
+
 
     // 목표 점수 도달 여부 체크
     private void CheckGoalReached()
