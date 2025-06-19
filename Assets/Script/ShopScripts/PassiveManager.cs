@@ -50,8 +50,16 @@ public class PassiveManager : MonoBehaviour
         if (GameTimerManager.Instance == null) return;
 
         float extraTime = GetTotalValue(PassiveType.AddTime);
-        GameTimerManager.Instance.AddTime(extraTime); //  즉시 시간 증가
+
+        //최대 게임 시간 자체를 증가시킴
+        GameTimerManager.Instance.gameDuration += extraTime;
+
+        //현재 남은 시간도 그만큼 늘려줌 (중간에 구매할 경우를 대비)
+        GameTimerManager.remainingTime += extraTime;
+
+        Debug.Log($"[패시브] 최대 게임 시간 증가: +{extraTime}초 → 총 {GameTimerManager.Instance.gameDuration}초");
     }
+
 
 
     /// <summary>

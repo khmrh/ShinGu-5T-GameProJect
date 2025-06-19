@@ -649,8 +649,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fcba535e8687424c99c9ed87189d7f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraController: {fileID: 6650404047327494819}
-  isPaused: 0
 --- !u!4 &148970764
 Transform:
   m_ObjectHideFlags: 0
@@ -1737,11 +1735,11 @@ MonoBehaviour:
     description: "\uAC01 \uB77C\uC6B4\uB4DC\uC758 \uCD5C\uB300\uC2DC\uAC04\uC774
       \uCD5C\uB300 30\uCD08 \uC99D\uAC00\uD569\uB2C8\uB2E4."
     icon: {fileID: 0}
-    valuePerPurchase: 30
+    valuePerPurchase: 10
     basePrice: 100
     priceMultiplier: 1.25
     timesPurchased: 0
-    maxPurchaseCount: 5
+    maxPurchaseCount: 3
   - type: 1
     name: "\uC0AC\uCFE0\uB77C\uB124?"
     description: "\uC7AC\uB8CC\uAC00 \uC0DD\uC131\uC774 \uB420\uB584 \uB192\uC740
