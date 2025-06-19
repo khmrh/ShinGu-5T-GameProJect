@@ -267,21 +267,51 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public bool SpawnPepperBySprite(Sprite sprite)
+    public bool SpawnPepperBySprite(int level, Sprite sprite)
     {
         if (sprite == null) return false;
 
-        DraggablePepper newRank = CreateRankInCellBySprite(sprite);
-        if (newRank == null)
+        GridCell emptyCell = FindEmptyCell();
+        if (emptyCell == null)
         {
             Debug.Log("빈 셀이 없어 생성 실패");
             return false;
         }
 
-        Debug.Log("그리드에 스프라이트 페퍼 생성 완료");
+        DraggablePepper newRank = CreateRankInCellBySpriteAndLevel(emptyCell, sprite, level);
+        if (newRank == null)
+        {
+            Debug.Log("계급장 생성 실패");
+            return false;
+        }
+
+        Debug.Log("그리드에 레벨 " + level + " 페퍼 생성 완료");
         return true;
     }
 
-    
+    public DraggablePepper CreateRankInCellBySpriteAndLevel(GridCell cell, Sprite sprite, int level)
+    {
+        if (cell == null || !cell.IsEmpty()) return null;
+
+        Vector3 rankPosition = new Vector3(cell.transform.position.x, cell.transform.position.y, 0.9f);
+
+        GameObject pepperObj = Instantiate(PepperPrefabs, rankPosition, Quaternion.identity, gridContainer);
+        pepperObj.name = "Pepper_Level" + level;
+
+        DraggablePepper rank = pepperObj.AddComponent<DraggablePepper>();
+        rank.SetSprite(sprite);
+        rank.SetPepperLevel(level);
+
+        rank.pepperManager = FindObjectOfType<PepperManager>();
+
+        rank.transform.position = rankPosition;
+        rank.originalPosition = rankPosition;
+
+        cell.SetRank(rank);
+
+        return rank;
+    }
+
+
 
 }

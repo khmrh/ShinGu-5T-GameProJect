@@ -25,11 +25,13 @@ public class OutsidePepper : MonoBehaviour
 
         if (pepperManager != null)
         {
-            pepperManager.HandleOutsidePepperClicked(pepperSprite);  // 스프라이트 전달
-            pepperManager.OnOutsidePepperDestroyed(gameObject);      // 리스트에서 제거
-            Destroy(gameObject);                                     // 삭제
+            // 레벨과 스프라이트 같이 전달하도록 함수 새로 만들거나 수정
+            pepperManager.HandleOutsidePepperClicked(pepperLevel, pepperSprite);
+            pepperManager.OnOutsidePepperDestroyed(gameObject);
+            Destroy(gameObject);
         }
     }
+
 
 
     public void SetPepper(int level, Sprite sprite)

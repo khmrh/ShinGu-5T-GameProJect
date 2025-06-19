@@ -92,7 +92,7 @@ public class PepperManager : MonoBehaviour
     }
 
     // 밖 페퍼 클릭 시 그리드에 생성 요청 (라운드 진행중일 때만)
-    public void HandleOutsidePepperClicked(Sprite sprite)
+    public void HandleOutsidePepperClicked(int level, Sprite sprite)
     {
         if (!isRoundActive)
         {
@@ -100,7 +100,7 @@ public class PepperManager : MonoBehaviour
             return;
         }
 
-        bool success = gridManager.SpawnPepperBySprite(sprite);
+        bool success = gridManager.SpawnPepperBySprite(level, sprite);
 
         if (!success)
         {
