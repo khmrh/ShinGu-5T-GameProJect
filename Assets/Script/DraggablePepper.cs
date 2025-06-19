@@ -48,7 +48,7 @@ public class DraggablePepper : MonoBehaviour
         }
     }
 
-    // 추가: 특정 스프라이트로 변경하는 메서드
+    // 특정 스프라이트로 변경하는 메서드
     public void SetSprite(Sprite sprite)
     {
         if (spriteRenderer != null)
@@ -70,10 +70,26 @@ public class DraggablePepper : MonoBehaviour
 
     void Update()
     {
+        // 라운드가 종료된 경우 드래그 상태를 강제로 해제하고 업데이트 루프를 빠져나감
+        if (pepperManager != null && !pepperManager.isRoundActive)
+        {
+            if (isDragging)
+            {
+                // 드래그 상태 강제 해제 (기존 방식)
+                isDragging = false;
+                isReturning = true;
+                spriteRenderer.sortingOrder = 5;
+                pepperCollider.enabled = true;
+            }
+            return; // 이후 로직 실행하지 않음
+        }
+
+        // 드래그 중일 때는 마우스 위치에 페퍼 위치를 따라가도록 함
         if (isDragging)
         {
             transform.position = GetMouseWorldPosition() + dragOffset;
         }
+        // 원래 위치로 돌아가는 중일 때 보간 이동 처리
         else if (isReturning)
         {
             pepperCollider.enabled = false; // 이동 중 클릭 방지
@@ -81,12 +97,13 @@ public class DraggablePepper : MonoBehaviour
 
             if (Vector3.Distance(transform.position, originalPosition) < 0.05f)
             {
-                // 💡 정확한 위치로 스냅, Z값 포함
+                // 정확한 위치로 스냅, Z값 포함
                 transform.position = new Vector3(originalPosition.x, originalPosition.y, 0.9f);
                 isReturning = false;
                 pepperCollider.enabled = true;
             }
         }
+        // 셀로 이동 중일 때 보간 이동 처리
         else if (isMovingToCell && targetMoveCell != null)
         {
             pepperCollider.enabled = false;
@@ -94,7 +111,7 @@ public class DraggablePepper : MonoBehaviour
 
             if (Vector3.Distance(transform.position, targetMoveCell.transform.position) < 0.1f)
             {
-                // 💡 최종 위치 고정 시에도 Z = 0.9f 적용
+                // 최종 위치 고정 시에도 Z = 0.9f 적용
                 transform.position = new Vector3(targetMoveCell.transform.position.x, targetMoveCell.transform.position.y, 0.9f);
                 isMovingToCell = false;
                 targetMoveCell = null;
@@ -105,12 +122,15 @@ public class DraggablePepper : MonoBehaviour
 
     private void OnMouseDown()
     {
+        // 상호작용 불가하거나 라운드가 끝난 경우 클릭 무시
         if (!isInteractable || (pepperManager != null && !pepperManager.isRoundActive))
             return;
 
+        // 부모가 그리드 컨테이너가 아니면 무시 (필요시 수정 가능)
         if (transform.parent != gridManager.gridContainer.transform)
             return;
 
+        // 현재 셀이 없으면 오브젝트 파괴 (예외 처리)
         if (currentCell == null)
         {
             Destroy(gameObject);
@@ -123,7 +143,20 @@ public class DraggablePepper : MonoBehaviour
 
     private void OnMouseUp()
     {
-        if (!isDragging || (pepperManager != null && !pepperManager.isRoundActive))
+        // 라운드가 끝났을 때 드래그 상태 해제 처리
+        if (pepperManager != null && !pepperManager.isRoundActive)
+        {
+            if (isDragging)
+            {
+                isDragging = false;
+                isReturning = true;
+                spriteRenderer.sortingOrder = 5;
+                pepperCollider.enabled = true;
+            }
+            return;
+        }
+
+        if (!isDragging)
             return;
 
         StopDragging();
@@ -133,7 +166,7 @@ public class DraggablePepper : MonoBehaviour
     {
         isDragging = true;
         dragOffset = transform.position - GetMouseWorldPosition();
-        spriteRenderer.sortingOrder = 10;
+        spriteRenderer.sortingOrder = 10; // 드래그 중 우선순위 올리기
     }
 
     void StopDragging()
@@ -143,6 +176,7 @@ public class DraggablePepper : MonoBehaviour
 
         isDragging = false;
         spriteRenderer.sortingOrder = 5;
+
         GridCell targetCell = gridManager.FindClosestCell(transform.position);
 
         if (targetCell != null)
@@ -176,7 +210,7 @@ public class DraggablePepper : MonoBehaviour
         targetCell.currentRank = this;
         currentCell = targetCell;
 
-        // 💡 복귀 위치에도 Z 고정
+        // 복귀 위치에도 Z 고정
         originalPosition = new Vector3(targetCell.transform.position.x, targetCell.transform.position.y, 0.9f);
     }
 
@@ -203,19 +237,16 @@ public class DraggablePepper : MonoBehaviour
         return mainCamera.ScreenToWorldPoint(mousePos);
     }
 
-    private int RollMaterialGradeFromPassive()
+    /// <summary>
+    /// 라운드 종료 시 즉시 원래 자리로 되돌리는 함수
+    /// </summary>
+    public void ForceReturnToOriginalPosition()
     {
-        Dictionary<int, float> probs = PassiveManager.Instance.GetSpawnProbabilities();
-        float rand = Random.value;
-        float cumulative = 0f;
-
-        foreach (var kvp in probs.OrderBy(k => k.Key))
-        {
-            cumulative += kvp.Value;
-            if (rand <= cumulative)
-                return kvp.Key;
-        }
-
-        return 1; // 기본 등급
+        isDragging = false;
+        isReturning = false;
+        isMovingToCell = false;
+        pepperCollider.enabled = true;
+        spriteRenderer.sortingOrder = 5;
+        transform.position = new Vector3(originalPosition.x, originalPosition.y, 0.9f);
     }
 }

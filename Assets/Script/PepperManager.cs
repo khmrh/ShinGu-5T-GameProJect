@@ -157,24 +157,39 @@ public class PepperManager : MonoBehaviour
     {
         isRoundActive = false;
 
-        // 밖 페퍼 정지 및 클릭 차단
+        // 밖 페퍼 즉시 원위치 처리
         foreach (var pepper in spawnedOutsidePeppers)
         {
-            if (pepper != null)
+            var draggable = pepper.GetComponent<DraggablePepper>();
+            if (draggable != null && draggable.isDragging)
             {
-                var pm = pepper.GetComponent<PepperMovement>();
-                if (pm != null)
-                    pm.enabled = false;
-
-                var collider = pepper.GetComponent<Collider2D>();
-                if (collider != null)
-                    collider.enabled = false;
+                draggable.ForceReturnToOriginalPosition();
             }
         }
 
-        // 그리드 안 페퍼 클릭 차단
-        DisableGridPepperInteraction();
+        // 그리드 안 페퍼 즉시 원위치 처리
+        if (gridManager != null)
+        {
+            for (int x = 0; x < gridManager.gridWidth; x++)
+            {
+                for (int y = 0; y < gridManager.gridHeight; y++)
+                {
+                    var cell = gridManager.grid[x, y];
+                    if (cell != null && cell.currentRank != null)
+                    {
+                        var draggable = cell.currentRank;
+                        if (draggable.isDragging)
+                        {
+                            draggable.ForceReturnToOriginalPosition();
+                        }
+                    }
+                }
+            }
+        }
+
+        // 그 밖에 라운드 종료 시 필요한 추가 처리...
     }
+
 
     public void DisableGridPepperInteraction()
     {
