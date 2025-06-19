@@ -13,11 +13,11 @@ public class MainMenuButtons : MonoBehaviour
     public GameObject settingsButton;
 
     [Header("ÆË¾÷Ã¢µé")]
-    public GameObject recordPopup;
+    //public GameObject recordPopup;
     public GameObject settingsPopup;
 
     [Header("´Ý±â ¹öÆ°µé")]
-    public GameObject closeRecordButton;
+    //public GameObject closeRecordButton;
 
     [Header("ÀÌµ¿ÇÒ ¾À ÀÌ¸§")]
     public string gameSceneName = "PepperMergeGame";
@@ -31,10 +31,10 @@ public class MainMenuButtons : MonoBehaviour
     {
         startButton.GetComponent<Button>().onClick.AddListener(StartGame);
         exitButton.GetComponent<Button>().onClick.AddListener(OpenExitConfirmPopup);
-        recordButton.GetComponent<Button>().onClick.AddListener(ToggleRecordPopup);
+        //recordButton.GetComponent<Button>().onClick.AddListener(ToggleRecordPopup);
         settingsButton.GetComponent<Button>().onClick.AddListener(ToggleSettingsPopup);
 
-        closeRecordButton.GetComponent<Button>().onClick.AddListener(CloseRecordPopup);
+        //closeRecordButton.GetComponent<Button>().onClick.AddListener(CloseRecordPopup);
 
         cancelExitButton.GetComponent<Button>().onClick.AddListener(CloseExitConfirmPopup);
         confirmExitButton.GetComponent<Button>().onClick.AddListener(ExitGame);
@@ -54,11 +54,11 @@ public class MainMenuButtons : MonoBehaviour
 #endif
     }
 
-    private void ToggleRecordPopup()
+   /* private void ToggleRecordPopup()
     {
         if (recordPopup != null)
             recordPopup.SetActive(!recordPopup.activeSelf);
-    }
+    }*/
 
     private void ToggleSettingsPopup()
     {
@@ -66,11 +66,11 @@ public class MainMenuButtons : MonoBehaviour
             settingsPopup.SetActive(!settingsPopup.activeSelf);
     }
 
-    private void CloseRecordPopup()
+    /*private void CloseRecordPopup()
     {
         if (recordPopup != null)
             recordPopup.SetActive(false);
-    }
+    }*/
 
     private void CloseSettingsPopup()
     {
